@@ -11,7 +11,9 @@
     "esModuleInterop": true,
     "lib": ["ESNext", "DOM"],
     "skipLibCheck": true,
-    "noEmit": true
+    "noEmit": false,
+    "declaration": true,
+    "declarationDir": "./out"
   },
   "include": ["playgrounds/**/*.ts", "playgrounds/**/*.d.ts", "playgrounds/**/*.tsx", "playgrounds/**/*.vue",
               "packages/**/*.ts", "packages/**/*.d.ts", "packages/**/*.tsx", "packages/**/*.vue",],

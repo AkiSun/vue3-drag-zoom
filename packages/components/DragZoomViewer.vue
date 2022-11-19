@@ -4,7 +4,7 @@ import { Position, Transform } from '../types'
 import { useDragZoom } from '../hooks'
 
 
-interface DragZoomViewerProps {
+export interface DragZoomViewerProps {
   viewTransform: Transform
   step?: number
   max?: number

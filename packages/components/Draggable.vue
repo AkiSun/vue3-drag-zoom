@@ -4,7 +4,7 @@ import { useDragZoom } from '../hooks'
 import { Position, Transform } from '../types'
 
 
-interface DraggableProps {
+export interface DraggableProps {
   transform: Transform,
   handleClass?: string,
   draggble?: boolean,

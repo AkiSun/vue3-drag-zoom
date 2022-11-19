@@ -3,7 +3,9 @@
 ## Features
 
 ## Install
-
+```bash
+npm i vue3-drag-zoom
+```
 ## Usage
 ### components
 ```ts

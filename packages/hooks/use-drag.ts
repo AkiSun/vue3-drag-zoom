@@ -6,7 +6,7 @@ import { unref, defaultPosition, defaultTransform } from '../utils'
 export interface UseDragOption {
   initialValue?: Transform
   parentTransform?: Transform
-  otherStyle?: MaybeComputedRef<CSSProperties>
+  otherStyle?: MaybeComputedRef<Object>
   triggerElement?: ElementRef
   dragButton?: number
   handleClass?: string

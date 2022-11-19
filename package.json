@@ -1,24 +1,33 @@
 {
   "name": "vue3-drag-zoom",
   "private": false,
-  "version": "1.0.0",
-  "description": "vue3 drag and zoom tools",
+  "version": "1.0.2",
+  "description": "A Drag & Zoom toolkit for Vue 3",
+  "author": "AkiSun",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/AkiSun/vue3-drag-zoom.git"
+  },
+  "homepage": "https://github.com/AkiSun/vue3-drag-zoom#readme",
   "files": [
     "dist"
   ],
-  "module": "./dist/vue3-drag-zoom.es.ts",
-  "main": "./dist/vue3-drag-zoom.umd.ts",
+  "module": "./dist/vue3-drag-zoom.es.js",
+  "main": "./dist/vue3-drag-zoom.umd.js",
+  "types": "./dist/vue3-drag-zoom.d.ts",
   "exports": {
-    "*": {
-      "import": "./dist/vue3-drag-zoom.es.ts",
-      "require": "./dist/vue3-drag-zoom.umd.ts"
+    ".": {
+      "import": "./dist/vue3-drag-zoom.es.js",
+      "require": "./dist/vue3-drag-zoom.umd.js"
     }
   },
   "keywords": ["vue3", "typescript", "drag", "zoom"],
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vue-tsc && vite build",
+    "build": "vue-tsc --noEmit && vite build",
+    "dts": "vue-tsc --declaration --emitDeclarationOnly",
     "preview": "vite preview"
   },
   "dependencies": {

@@ -9,7 +9,7 @@ export default defineConfig({
     lib: {
       entry: path.resolve(__dirname, 'packages/index.ts'),
       name: 'vue3-drag-zoom',
-      fileName: format => `vue3-drag-zoom.${format}.ts`
+      fileName: format => `vue3-drag-zoom.${format}.js`
     },
     rollupOptions: {
       external: ['vue'],
