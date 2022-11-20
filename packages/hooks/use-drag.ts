@@ -6,10 +6,11 @@ import { unref, defaultPosition, defaultTransform } from '../utils'
 export interface UseDragOption {
   initialValue?: Transform
   parentTransform?: Transform
-  otherStyle?: MaybeComputedRef<Object>
+  otherStyle?: MaybeComputedRef<CSSProperties>
   triggerElement?: ElementRef
   dragButton?: number
-  handleClass?: string
+  dragHandleClass?: string
+  dragPreventClass?: string
   onStart?: { (pos: Position, event: MouseEvent): void | false }
   onMove?: { (pos: Position, delta: Position, event: MouseEvent): void }
   onEnd?: { (pos: Position, event: MouseEvent): void }
@@ -20,6 +21,7 @@ export function useDrag(el: ElementRef, option: UseDragOption = {}) {
   const transform = reactive<Transform>(option.initialValue ?? defaultTransform())
   const trigger = option.triggerElement ?? el
   const dragButton = option.dragButton ?? 0
+  const dragPreventClass = option.dragPreventClass ?? 'drag-prevent'
   const isDragging = ref(false)
   let parentTransform = option.parentTransform
 
@@ -29,8 +31,10 @@ export function useDrag(el: ElementRef, option: UseDragOption = {}) {
   }))
 
   const onMousedown = (mousedownEvent: MouseEvent) => {
-    if (mousedownEvent.button !== dragButton || option.onStart?.(transform, mousedownEvent) === false) return
-    if (option.handleClass && !(mousedownEvent.target as HTMLElement).className.includes(option.handleClass)) return
+    if (mousedownEvent.button !== dragButton) return
+    if ((mousedownEvent.target as HTMLElement).className.includes(dragPreventClass)) return
+    if (option.dragHandleClass && !(mousedownEvent.target as HTMLElement).className.includes(option.dragHandleClass)) return
+    if (option.onStart?.(transform, mousedownEvent) === false) return
 
     isDragging.value = true
     const prevMousePos = {

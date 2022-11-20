@@ -1,19 +1,16 @@
 <script setup lang="ts">
 import { ref, provide } from 'vue'
-import { Position, Transform } from '../types'
+import { Position, Transform, Range } from '../types'
 import { useDragZoom } from '../hooks'
+import { defaultRange } from '../utils'
 
 
 export interface DragZoomViewerProps {
   viewTransform: Transform
-  step?: number
-  max?: number
-  min?: number
+  zoomRange?: Range
 }
 const props = withDefaults(defineProps<DragZoomViewerProps>(), {
-  step: 0.2,
-  max: 5.0,
-  min: 0.2
+  zoomRange: () => defaultRange()
 })
 const emit = defineEmits<{
   (e: 'start', pos: Position, event: MouseEvent): void,
@@ -26,10 +23,8 @@ const el = ref()
 const trigger = ref()
 const { style } = useDragZoom(el, {
   initialValue: props.viewTransform,
+  zoomRange: props.zoomRange,
   triggerElement: trigger,
-  step: () => props.step,
-  max: () => props.max,
-  min: () => props.min,
   onStart: (pos, event) => emit('start', pos, event),
   onMove: (pos, delta, event) => emit('move', pos, delta, event),
   onEnd: (pos, event) => emit('end', pos, event),
@@ -43,7 +38,7 @@ provide('PARENT_TRANSFORM', props.viewTransform)
 
 <template>
   <div ref="trigger" style="position: relative; overflow: hidden;">
-    <slot name="fixed"></slot>
+    <div style="position: absolute; z-index: 999;"><slot name="fixed"></slot></div>
     <div ref="el" :style="style"> <slot></slot></div>
   </div>
 </template>

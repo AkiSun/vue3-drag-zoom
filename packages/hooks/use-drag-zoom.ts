@@ -1,29 +1,25 @@
-import { onMounted, onBeforeUnmount, getCurrentInstance } from "vue"
-import { ElementRef, MaybeComputedRef } from '../types'
-import { unref, clamp } from "../utils"
+import { onMounted, onBeforeUnmount, getCurrentInstance, reactive } from "vue"
+import { ElementRef, Range } from '../types'
+import { unref, clamp, defaultRange } from "../utils"
 import { useDrag, UseDragOption } from './use-drag'
 
 
 
 export interface UseDragZoomOption extends UseDragOption {
-  step?: MaybeComputedRef<number>
-  max?: MaybeComputedRef<number>
-  min?: MaybeComputedRef<number>
+  zoomRange?: Range
   onZoom?: { (scale: number, event: WheelEvent): void | false }
 }
 
 export function useDragZoom(el: ElementRef, option: UseDragZoomOption = {}) {
   const { transform, parentTransform, trigger, ...restStates } = useDrag(el, option)
+  const range = reactive<Range>(option.zoomRange ?? defaultRange())
   if (!transform.scale) {
     transform.scale = 1.0
   }
-  const min = option.min ?? 0.2
-  const max = option.max ?? 5.0
-  const step = option.step ?? 0.2
 
   const onWheel = (event: WheelEvent) => {
-    const delta = (event.deltaY / -100) * unref(step)
-    const newScale = clamp(transform.scale! + delta, unref(min), unref(max))
+    const delta = (event.deltaY / -100) * unref(range.step)
+    const newScale = clamp(transform.scale! + delta, range.min, range.max)
 
     if (option.onZoom?.(newScale, event) === false) return
 
@@ -65,6 +61,7 @@ export function useDragZoom(el: ElementRef, option: UseDragZoomOption = {}) {
 
   return {
     transform,
+    range,
     ...restStates
   }
 }
