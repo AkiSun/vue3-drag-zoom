@@ -1,11 +1,15 @@
 # Drag & Zoom toolkit for Vue 3
 
 ## Features
-
+- **Easy to use:** Out of the box Drag & Zoom components, make element draggable and scalable simply.
+- **Hooks and Directives:** Hooks in vue setup and Directives in vue template are supported.
+- **Type friendly:** Written in Typescript.
+  
 ## Install
 ```bash
 npm i vue3-drag-zoom
 ```
+
 ## Usage
 ### components
 ```ts
@@ -46,3 +50,5 @@ const { style } = useDrag(el, { initialValue: { x: 100, y: 100 } })
 </template>
 ```
 
+## License
+[MIT license](https://github.com/AkiSun/vue3-drag-zoom/blob/master/LICENSE) © 2022 [AkiSun](https://github.com/AkiSun)
