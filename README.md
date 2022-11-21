@@ -27,7 +27,7 @@ Use components or directives in your code
 ```html
 <script setup lang="ts">
 import { reactive } from 'vue'
-const transform = { x: 100, y: 100 }
+const transform = reactive({ x: 100, y: 100 })
 </script>
 
 <template>
@@ -71,7 +71,7 @@ const { style, transform } = useDrag(el, {
 </template>
 ```
 
-## Advanced Usage
+## Documentation
 - Components
   - Draggable
   - DragZoomContainer

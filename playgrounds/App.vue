@@ -2,55 +2,46 @@
 import { reactive } from 'vue'
 import { DragZoomContainer, Draggable, defaultTransform } from '../packages'
 
-
-const transform = reactive(defaultTransform())
-const itemList = reactive([
-  { id: 0, position: { x: 200, y: 100 }, draggable: true, scalable: true },
-  { id: 1, position: { x: 350, y: 250 }, draggable: true, scalable: true },
-  { id: 2, position: { x: 500, y: 100 }, draggable: true, scalable: true },
+const viewTransform = reactive(defaultTransform())
+const items = reactive([
+  { id: 0, transform: { x: 250, y: 100 } },
+  { id: 1, transform: { x: 100, y: 200 } },
+  { id: 2, transform: { x: 200, y: 300 } },
 ])
-
 
 </script>
 
 <template>
-  <DragZoomContainer class="wrapper" :view-transform="transform">
+  <DragZoomContainer class="viewport" :view-transform="viewTransform" :zoom-range="{ max: 2, min: 0.5, step: 0.5 }">
     <template #fixed>
-      <button style="margin: 20px;" @click="Object.assign(transform, defaultTransform())">reset view</button>
+      <div style="left: 20px; top: 20px; position: absolute;">
+        <button @click="Object.assign(viewTransform, defaultTransform())">
+          reset
+        </button>
+      </div>
     </template>
-    <Draggable v-for="item in itemList" :transform="item.position" :draggable="item.draggable" :scalable="item.scalable">
-      <div class="block">
-        <button class="drag-prevent" @click="item.draggable = !item.draggable">
-          drag: {{ item.draggable ? 'on' : 'off' }}
-        </button>
-        <button class="drag-prevent" @click="item.scalable = !item.scalable">
-          zoom: {{ item.scalable ? 'on' : 'off' }}
-        </button>
-        <button class="drag-prevent" @click="(item.position as any).scale = 1">reset</button>
+    <Draggable class="draggable" v-for="item in items" :transform="item.transform">
+      👋Drag item #{{item.id}}
+      <div style="color: gray;">
+        I am at {{ item.transform.x }}, {{ item.transform.y }}
       </div>
     </Draggable>
   </DragZoomContainer>
-  <div>{{ transform }}</div>
 </template>
 
 <style>
-.wrapper {
+.viewport {
   width: 860px;
   height: 600px;
   border: 1px solid gray;
 }
-.block {
-  width: 150px;
-  height: 150px;
-  border: 1px solid red;
-  box-sizing: border-box;
+.draggable {
+  width: 180px;
+  background-color: white;
+  border: 1px solid gray;
+  border-radius: 4px;
+  padding: 12px 16px;
   user-select: none;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-evenly;
-  align-items: center;
-}
-.drag-prevent {
-  width: 80px;
+  cursor: move;
 }
 </style>
