@@ -15,3 +15,8 @@ export interface Transform extends Position {
   scale?: number
 }
 
+export interface Range {
+  min: number
+  max: number
+  step: number
+}

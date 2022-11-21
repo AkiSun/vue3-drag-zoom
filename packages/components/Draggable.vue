@@ -1,43 +1,47 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { useDragZoom } from '../hooks'
-import { Position, Transform } from '../types'
+import { Position, Transform, Range } from '../types'
+import { defaultRange } from '../utils'
 
 
 export interface DraggableProps {
   transform: Transform,
-  handleClass?: string,
-  draggble?: boolean,
-  scalable?: boolean
+  dragHandleClass?: string,
+  draggable?: boolean,
+  scalable?: boolean,
+  zoomRange?: Range
 }
 const props = withDefaults(defineProps<DraggableProps>(), {
-  draggble: true,
-  scalable: false
+  draggable: true,
+  scalable: false,
+  zoomRange: () => defaultRange()
 })
 const emit = defineEmits<{
-  (e: 'start', pos: Position, event: MouseEvent): void,
-  (e: 'move', pos: Position, delta: Position, event: MouseEvent): void,
-  (e: 'end', pos: Position, event: MouseEvent): void,
+  (e: 'drag-start', pos: Position, event: MouseEvent): void,
+  (e: 'drag-move', pos: Position, delta: Position, event: MouseEvent): void,
+  (e: 'drag-end', pos: Position, event: MouseEvent): void,
   (e: 'zoom', scale: number, event: WheelEvent): void,
 }>()
 
 const el = ref()
 const { style } = useDragZoom(el, {
   initialValue: props.transform,
-  handleClass: props.handleClass,
-  onStart: (pos, event) => {
-    emit('start', pos, event)
-    if (!props.draggble) return false
+  zoomRange: props.zoomRange,
+  dragHandleClass: props.dragHandleClass,
+  onDragStart: (pos, event) => {
+    if (!props.draggable) return false
+    emit('drag-start', pos, event)
   },
-  onMove: (pos, delta, event) => {
-    emit('move', pos, delta, event)
+  onDragMove: (pos, delta, event) => {
+    emit('drag-move', pos, delta, event)
   },
-  onEnd: (pos, event) => {
-    emit('end', pos, event)
+  onDragEnd: (pos, event) => {
+    emit('drag-end', pos, event)
   },
   onZoom: (scale, event) => {
-    emit('zoom', scale, event)
     if (!props.scalable) return false
+    emit('zoom', scale, event)
   }
 })
 

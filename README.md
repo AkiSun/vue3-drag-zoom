@@ -1,48 +1,86 @@
-# Drag & Zoom toolkit for Vue 3
+<h1 align="center">Drag & Zoom toolkit for Vue 3</h1>
 
 ## Features
+- Make element draggable and scalable simply
+- Out of the box Drag & Zoom components
+- Provides powerful container components
+- Hooks and directives are supported
+- Reactive properties
+- Written in [Typescript](https://www.typescriptlang.org/)
 
-## Install
+## Installation
 ```bash
 npm i vue3-drag-zoom
 ```
-## Usage
-### components
+
+## Basic Usage
+Register the component
 ```ts
+// main.ts
+import { createApp } from 'vue'
+import VueDragZoom from 'vue3-drag-zoom'
+import App from './App.vue'
+
+createApp(App).use(VueDragZoom).mount('#app')
+```
+Use components or directives in your code
+```html
 <script setup lang="ts">
-import { Draggable } from 'vue3-drag-zoom'
-const position = { x: 100, y: 100 }
+import { reactive } from 'vue'
+const transform = reactive({ x: 100, y: 100 })
 </script>
+
 <template>
-  <Draggable :transform="position">
-    ...
+  <Draggable :transform="transform">
+    <div class="wrapped-block">
+      Drag me! I am at {{ transform.x }}, {{ transform.y }}
+    </div>
   </Draggable>
 </template>
 ```
-### directives
-```ts
+```html
 <script setup lang="ts">
-import { vDrag } from 'vue3-drag-zoom'
-const position = { x: 100, y: 100 }
+import { reactive } from 'vue'
+const transform = reactive({ x: 100, y: 100 })
 </script>
+
 <template>
-  <div v-drag="position">
-    ...
+  <div v-drag="transform">
+    Drag me! I am at {{ transform.x }}, {{ transform.y }}
   </div>
 </template>
 ```
-### hooks
-```ts
+Hooks must be imported manually
+```html 
 <script setup lang="ts">
 import { ref } from 'vue'
 import { useDrag } from 'vue3-drag-zoom'
+
 const el = ref()
-const { style } = useDrag(el, { initialValue: { x: 100, y: 100 } })
+const { style, transform } = useDrag(el, {
+  initialValue: { x: 100, y: 100 },
+  onDragStart: (pos) => console.log(`drag start at ${pos,x}, ${pos.y}`),
+  onDragEnd: (pos) => console.log(`drag end at ${pos.x}, ${pos.y}`)
+})
 </script>
+
 <template>
   <div ref="el" :style="style">
-    ...
+    Drag me! I am at {{ transform.x }}, {{ transform.y }}
   </div>
 </template>
 ```
 
+## Documentation
+- Components
+  - Draggable
+  - DragZoomContainer
+- Directives
+  - v-drag
+  - v-drag-zoom
+- Hooks
+  - useDrag
+  - useDragZoom
+
+## License
+The MIT License (MIT). Please see [License File](https://github.com/AkiSun/vue3-drag-zoom/blob/master/LICENSE) for more information.
