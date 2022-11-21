@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { reactive } from 'vue'
-import { DragZoomViewer, Draggable, defaultTransform } from '../packages'
+import { DragZoomContainer, Draggable, defaultTransform } from '../packages'
 
 
 const transform = reactive(defaultTransform())
@@ -14,7 +14,7 @@ const itemList = reactive([
 </script>
 
 <template>
-  <DragZoomViewer class="wrapper" :view-transform="transform">
+  <DragZoomContainer class="wrapper" :view-transform="transform">
     <template #fixed>
       <button style="margin: 20px;" @click="Object.assign(transform, defaultTransform())">reset view</button>
     </template>
@@ -29,7 +29,7 @@ const itemList = reactive([
         <button class="drag-prevent" @click="(item.position as any).scale = 1">reset</button>
       </div>
     </Draggable>
-  </DragZoomViewer>
+  </DragZoomContainer>
   <div>{{ transform }}</div>
 </template>
 

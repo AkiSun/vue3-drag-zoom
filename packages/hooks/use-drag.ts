@@ -11,9 +11,9 @@ export interface UseDragOption {
   dragButton?: number
   dragHandleClass?: string
   dragPreventClass?: string
-  onStart?: { (pos: Position, event: MouseEvent): void | false }
-  onMove?: { (pos: Position, delta: Position, event: MouseEvent): void }
-  onEnd?: { (pos: Position, event: MouseEvent): void }
+  onDragStart?: { (pos: Position, event: MouseEvent): void | false }
+  onDragMove?: { (pos: Position, delta: Position, event: MouseEvent): void }
+  onDragEnd?: { (pos: Position, event: MouseEvent): void }
 }
 
 export function useDrag(el: ElementRef, option: UseDragOption = {}) {
@@ -34,7 +34,7 @@ export function useDrag(el: ElementRef, option: UseDragOption = {}) {
     if (mousedownEvent.button !== dragButton) return
     if ((mousedownEvent.target as HTMLElement).className.includes(dragPreventClass)) return
     if (option.dragHandleClass && !(mousedownEvent.target as HTMLElement).className.includes(option.dragHandleClass)) return
-    if (option.onStart?.(transform, mousedownEvent) === false) return
+    if (option.onDragStart?.(transform, mousedownEvent) === false) return
 
     isDragging.value = true
     const prevMousePos = {
@@ -55,14 +55,14 @@ export function useDrag(el: ElementRef, option: UseDragOption = {}) {
       transform.x += deltaPosition.x
       transform.y += deltaPosition.y
 
-      option.onMove?.(transform, deltaPosition, e)
+      option.onDragMove?.(transform, deltaPosition, e)
     }
   
     const onMouseup = (e: MouseEvent) => {
       if (!isDragging.value) return
       isDragging.value = false
 
-      option.onEnd?.(transform, e)
+      option.onDragEnd?.(transform, e)
 
       document.removeEventListener('mousemove', onMousemove)
       document.removeEventListener('mouseup', onMouseup)

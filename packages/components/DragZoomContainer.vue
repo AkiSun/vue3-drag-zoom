@@ -5,17 +5,17 @@ import { useDragZoom } from '../hooks'
 import { defaultRange } from '../utils'
 
 
-export interface DragZoomViewerProps {
+export interface DragZoomContainerProps {
   viewTransform: Transform
   zoomRange?: Range
 }
-const props = withDefaults(defineProps<DragZoomViewerProps>(), {
+const props = withDefaults(defineProps<DragZoomContainerProps>(), {
   zoomRange: () => defaultRange()
 })
 const emit = defineEmits<{
-  (e: 'start', pos: Position, event: MouseEvent): void,
-  (e: 'move', pos: Position, delta: Position, event: MouseEvent): void,
-  (e: 'end', pos: Position, event: MouseEvent): void,
+  (e: 'drag-start', pos: Position, event: MouseEvent): void,
+  (e: 'drag-move', pos: Position, delta: Position, event: MouseEvent): void,
+  (e: 'drag-end', pos: Position, event: MouseEvent): void,
   (e: 'zoom', scale: number, event: WheelEvent): void,
 }>()
 
@@ -25,9 +25,9 @@ const { style } = useDragZoom(el, {
   initialValue: props.viewTransform,
   zoomRange: props.zoomRange,
   triggerElement: trigger,
-  onStart: (pos, event) => emit('start', pos, event),
-  onMove: (pos, delta, event) => emit('move', pos, delta, event),
-  onEnd: (pos, event) => emit('end', pos, event),
+  onDragStart: (pos, event) => emit('drag-start', pos, event),
+  onDragMove: (pos, delta, event) => emit('drag-move', pos, delta, event),
+  onDragEnd: (pos, event) => emit('drag-end', pos, event),
   onZoom: (scale, event) => emit('zoom', scale, event),
 })
 

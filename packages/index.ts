@@ -5,11 +5,11 @@ export * from './directives'
 import { defaultPosition, defaultTransform, defaultRange } from './utils'
 
 import Draggable from './components/Draggable.vue'
-import DragZoomViewer from './components/DragZoomViewer.vue'
+import DragZoomContainer from './components/DragZoomContainer.vue'
 
 export {
   Draggable,
-  DragZoomViewer,
+  DragZoomContainer,
   defaultPosition,
   defaultTransform,
   defaultRange
