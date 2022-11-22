@@ -1,4 +1,4 @@
-import { reactive, ref, computed, onMounted, onBeforeUnmount, CSSProperties, getCurrentInstance, inject } from 'vue'
+import { reactive, ref, computed, onMounted, onBeforeUnmount, getCurrentInstance, inject } from 'vue'
 import { ElementRef, MaybeComputedRef, Position, Transform } from '../types'
 import { unref, defaultPosition, defaultTransform } from '../utils'
 
@@ -6,7 +6,7 @@ import { unref, defaultPosition, defaultTransform } from '../utils'
 export interface UseDragOption {
   initialValue?: Transform
   parentTransform?: Transform
-  otherStyle?: MaybeComputedRef<CSSProperties>
+  otherStyle?: MaybeComputedRef<Object>
   triggerElement?: ElementRef
   dragButton?: number
   dragHandleClass?: string

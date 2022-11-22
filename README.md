@@ -9,7 +9,7 @@
 - Written in [Typescript](https://www.typescriptlang.org/)
 
 ## Demo
-![](https://github.com/AkiSun/vue3-drag-zoom/blob/dev/demo/demo.gif)
+![demo.gif](https://github.com/AkiSun/vue3-drag-zoom/blob/dev/demo/demo.gif?raw=true)
 
 ## Installation
 ```bash
@@ -76,14 +76,11 @@ const { style, transform } = useDrag(el, {
 
 ## Documentation
 - Components
-  - DragZoomItem
-  - DragZoomContainer
-- Directives
-  - v-drag
-  - v-drag-zoom
+  - [DragZoomItem.md](https://github.com/AkiSun/vue3-drag-zoom/blob/dev/packages/components/DragZoomItem.md)
+  - [DragZoomContainer.md](https://github.com/AkiSun/vue3-drag-zoom/blob/dev/packages/components/DragZoomContainer.md)
 - Hooks
-  - useDrag
-  - useDragZoom
+  - [useDrag](https://github.com/AkiSun/vue3-drag-zoom/blob/dev/packages/hooks/useDrag.md)
+  - [useDragZoom](https://github.com/AkiSun/vue3-drag-zoom/blob/dev/packages/hooks/useDragZoom.md)
 
 ## License
 The MIT License (MIT). Please see [License File](https://github.com/AkiSun/vue3-drag-zoom/blob/master/LICENSE) for more information.
