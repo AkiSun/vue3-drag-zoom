@@ -18,8 +18,8 @@ Register the component
 ```ts
 // main.ts
 import { createApp } from 'vue'
-import VueDragZoom from 'vue3-drag-zoom'
 import App from './App.vue'
+import VueDragZoom from 'vue3-drag-zoom'
 
 createApp(App).use(VueDragZoom).mount('#app')
 ```
@@ -31,11 +31,11 @@ const transform = reactive({ x: 100, y: 100 })
 </script>
 
 <template>
-  <Draggable :transform="transform">
+  <drag-zoom-item :transform="transform">
     <div class="wrapped-block">
       Drag me! I am at {{ transform.x }}, {{ transform.y }}
     </div>
-  </Draggable>
+  </drag-zoom-item>
 </template>
 ```
 ```html
@@ -73,7 +73,7 @@ const { style, transform } = useDrag(el, {
 
 ## Documentation
 - Components
-  - Draggable
+  - DragZoomItem
   - DragZoomContainer
 - Directives
   - v-drag

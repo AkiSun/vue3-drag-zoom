@@ -10,9 +10,9 @@ const viewTransform = reactive({ x: 100, y: 100 })
 </script>
 
 <template>
-  <DragZoomContainer class="viewport" :view-transform="viewTransform">
+  <drag-zoom-container class="viewport" :view-transform="viewTransform">
     <img src="image.jpg" :draggable="false" />
-  </DragZoomContainer>
+  </drag-zoom-container>
 </template>
 
 <style>
@@ -28,19 +28,19 @@ const viewTransform = reactive({ x: 100, y: 100 })
 ## View zoom range
 Set the maximum, minimum and change step of the viewport zoom range.
 ```html
-<DragZoomContainer
+<drag-zoom-container
   class="view-port"
   :view-transform="viewTransform"
   :zoom-range="{ max: 2, min: 0.5, step: 0.5 }"
 >
   <img src="image.jpg" :draggable="false" />
-</DragZoomContainer>
+</drag-zoom-container>
 ```
 
 ## Fixed slot
 Place elements that do not need to be dragged, such as UI buttons.
 ```html
-<DragZoomContainer
+<drag-zoom-container
   class="view-port" :view-transform="viewTransform">
   <template #fixed>
     <div style="left: 20px; top: 20px; position: absolute;">
@@ -49,8 +49,8 @@ Place elements that do not need to be dragged, such as UI buttons.
       </button>
     </div>
   </template>
-  <something />
-</DragZoomContainer>
+  <drag-zoom-item ... />
+</drag-zoom-container>
 ```
 
 ## Nested with Draggable components
@@ -69,14 +69,14 @@ const items = reactive([
 </script>
 
 <template>
-  <DragZoomContainer class="viewport" :view-transform="viewTransform">
-    <Draggable class="draggable" v-for="item in items" :transform="item.transform">
+  <drag-zoom-container class="viewport" :view-transform="viewTransform">
+    <drag-zoom-item class="draggable" v-for="item in items" :transform="item.transform">
       👋Drag item #{{item.id}}
       <div style="color: gray;">
         I am at {{ item.transform.x }}, {{ item.transform.y }}
       </div>
-    </Draggable>
-  </DragZoomContainer>
+    </drag-zoom-item>
+  </drag-zoom-container>
 </template>
 
 <style>
