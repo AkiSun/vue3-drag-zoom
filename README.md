@@ -8,6 +8,9 @@
 - Reactive properties
 - Written in [Typescript](https://www.typescriptlang.org/)
 
+## Demo
+![](https://github.com/AkiSun/vue3-drag-zoom/blob/dev/demo/demo.gif)
+
 ## Installation
 ```bash
 npm i vue3-drag-zoom
