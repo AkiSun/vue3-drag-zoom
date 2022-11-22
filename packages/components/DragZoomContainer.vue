@@ -37,9 +37,13 @@ provide('PARENT_TRANSFORM', props.viewTransform)
 </script>
 
 <template>
-  <div ref="trigger" style="position: relative; overflow: hidden;">
-    <div style="position: absolute; z-index: 999;"><slot name="fixed"></slot></div>
-    <div ref="el" :style="style"> <slot></slot></div>
+  <div class="viewport" ref="trigger" style="position: relative; overflow: hidden;">
+    <div class="fixed" style="position: absolute; width: 100%; height: 100%;">
+      <slot name="fixed"></slot>
+    </div>
+    <div class="view" ref="el" :style="style">
+      <slot name="default"></slot>
+    </div>
   </div>
 </template>
 

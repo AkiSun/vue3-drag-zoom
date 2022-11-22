@@ -1,14 +1,29 @@
+import { App, Plugin } from 'vue'
 export * from './types'
 export * from './hooks'
-export * from './directives'
 
 import { defaultPosition, defaultTransform, defaultRange } from './utils'
 
-import Draggable from './components/Draggable.vue'
+import { vDrag, vDragZoom } from './directives'
+
+import DragZoomItem from './components/DragZoomItem.vue'
 import DragZoomContainer from './components/DragZoomContainer.vue'
 
+const install = (app: App) => {
+  return app
+    .component('DragZoomItem', DragZoomItem)
+    .component('DragZoomContainer', DragZoomContainer)
+    .directive('drag', vDrag)
+    .directive('drag-zoom', vDragZoom)
+}
+
+const VueDragZoom: Plugin = { install }
+
+export default VueDragZoom
 export {
-  Draggable,
+  vDrag,
+  vDragZoom,
+  DragZoomItem,
   DragZoomContainer,
   defaultPosition,
   defaultTransform,

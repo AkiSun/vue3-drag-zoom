@@ -1,8 +1,8 @@
-# Draggable
-Make elements draggable and scalable (optional).
+# DragZoomItem
+Make elements draggable and scalable.
 
 ## Basic usage
-Put contents into Draggable's slot to get a draggable contents.
+Put contents into component's slot to get a draggable and scalable contents.
 ```html
 <script setup lang="ts">
 import { reactive } from 'vue'
@@ -10,12 +10,12 @@ const transform = reactive({ x: 100, y: 100 })
 </script>
 
 <template>
-  <Draggable class="draggable" :transform="transform">
+  <drag-zoom-item class="draggable" :transform="transform">
     👋Drag me!
     <div style="color: gray;">
       I am at {{ transform.x }}, {{ transform.y }}
     </div>
-  </Draggable>
+  </drag-zoom-item>
 </template>
 
 <style>
@@ -32,7 +32,7 @@ const transform = reactive({ x: 100, y: 100 })
 ## Drag with handle
 You can specify the drag handle witch you want to trigger drag event.
 ```html
-<Draggable
+<drag-zoom-item
   class="draggable"
   drag-handle-class="handle"
   :transform="transform"
@@ -41,13 +41,13 @@ You can specify the drag handle witch you want to trigger drag event.
   <div style="color: gray;">
     I am at {{ transform.x }}, {{ transform.y }}
   </div>
-</Draggable>
+</drag-zoom-item>
 ```
 
 ## Enable zoom
 Set scalable attribute to enable scaling.
 ```html
-<Draggable
+<drag-zoom-item
   class="draggable"
   :transform="transform"
   scalable
@@ -60,7 +60,7 @@ Set scalable attribute to enable scaling.
   <div style="color: gray;">
     and scale is {{ transform.scale }}
   </div>
-</Draggable>
+</drag-zoom-item>
 ```
 
 ## Attributes

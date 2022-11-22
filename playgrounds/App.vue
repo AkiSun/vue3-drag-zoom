@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { reactive } from 'vue'
-import { DragZoomContainer, Draggable, defaultTransform } from '../packages'
+import { defaultTransform } from '../packages'
 
 const viewTransform = reactive(defaultTransform())
 const items = reactive([
@@ -12,7 +12,7 @@ const items = reactive([
 </script>
 
 <template>
-  <DragZoomContainer class="viewport" :view-transform="viewTransform" :zoom-range="{ max: 2, min: 0.5, step: 0.5 }">
+  <drag-zoom-container class="viewport" :view-transform="viewTransform">
     <template #fixed>
       <div style="left: 20px; top: 20px; position: absolute;">
         <button @click="Object.assign(viewTransform, defaultTransform())">
@@ -20,13 +20,13 @@ const items = reactive([
         </button>
       </div>
     </template>
-    <Draggable class="draggable" v-for="item in items" :transform="item.transform">
+    <drag-zoom-item class="draggable" v-for="item in items" :transform="item.transform">
       👋Drag item #{{item.id}}
       <div style="color: gray;">
         I am at {{ item.transform.x }}, {{ item.transform.y }}
       </div>
-    </Draggable>
-  </DragZoomContainer>
+    </drag-zoom-item>
+  </drag-zoom-container>
 </template>
 
 <style>
