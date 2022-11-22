@@ -1,8 +1,7 @@
 import { App, Plugin } from 'vue'
-export * from './types'
-export * from './hooks'
-
+import { Position, Transform, Range } from './types'
 import { defaultPosition, defaultTransform, defaultRange } from './utils'
+import { useDrag, useDragZoom, UseDragOption, UseDragZoomOption } from './hooks'
 
 import { vDrag, vDragZoom } from './directives'
 
@@ -21,6 +20,8 @@ const VueDragZoom: Plugin = { install }
 
 export default VueDragZoom
 export {
+  useDrag,
+  useDragZoom,
   vDrag,
   vDragZoom,
   DragZoomItem,
@@ -28,4 +29,11 @@ export {
   defaultPosition,
   defaultTransform,
   defaultRange
+}
+export type {
+  Position,
+  Transform,
+  Range,
+  UseDragOption,
+  UseDragZoomOption
 }
