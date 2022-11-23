@@ -8,8 +8,11 @@ import { ref } from 'vue'
 import { useDrag } from 'vue3-drag-zoom'
 
 const el = ref()
-const { style, transform } = useDrag(el, {
-  initialValue: { x: 100, y: 100 }
+const transform = ref({ x: 0, y: 0, scale: 1 })
+const { style } = useDrag(el, transform, {
+  onDragMove: (newTransform) => {
+    transform.value = newTransform
+  }
 })
 </script>
 
@@ -23,15 +26,14 @@ const { style, transform } = useDrag(el, {
 ## Type Declarations
 ```ts
 export interface UseDragOption {
-  initialValue?: Transform
+  triggerElement?: MaybeRef<HTMLElement | undefined>
   parentTransform?: Transform
-  otherStyle?: MaybeComputedRef<CSSProperties>
-  triggerElement?: ElementRef
-  dragButton?: number
+  dragButton?: 0 | 1 | 2
   dragHandleClass?: string
   dragPreventClass?: string
-  onDragStart?: { (pos: Position, event: MouseEvent): void | false }
-  onDragMove?: { (pos: Position, delta: Position, event: MouseEvent): void }
-  onDragEnd?: { (pos: Position, event: MouseEvent): void }
+  onChange?: { (newTransform: Transform): void }
+  onDragStart?: { (event: MouseEvent): void | false }
+  onDragMove?: { (newTransform: Transform, event: MouseEvent): void }
+  onDragEnd?: { (event: MouseEvent): void }
 }
 ```

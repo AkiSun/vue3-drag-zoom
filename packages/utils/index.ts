@@ -22,10 +22,10 @@ export function defaultPosition(): Position {
 }
 
 export function defaultTransform(): Transform {
-  return { ...defaultPosition(), scale: 1.0 }
+  return { x: 0, y: 0, scale: 1.0 }
 }
 
 export function defaultRange(): Range {
-  return { min: 0.2, max: 5.0, step: 0.2 }
+  return { min: 0.4, max: 2.0, step: 0.2 }
 }
 

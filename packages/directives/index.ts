@@ -1,17 +1,20 @@
-import { Directive, watchEffect } from 'vue'
-import { useDrag } from "../hooks/use-drag"
-import { useDragZoom } from "../hooks/use-drag-zoom"
-import { MaybeRef } from '../types'
+import { Directive, reactive, watchEffect } from 'vue'
+import { useDrag, useDragZoom } from "../hooks"
+import { MaybeRef, Transform } from '../types'
 import { defaultTransform, toAny } from '../utils'
 
 
-type HookType<T> = {(el: MaybeRef<HTMLElement | undefined>, option: T): any}
+type HookFunction = { (el: MaybeRef<HTMLElement | undefined>, transformProps: Transform, option: any): any }
 
-function makeDirective<T>(hook: HookType<T>): Directive<HTMLElement> {
+function makeDirective(hookFn: HookFunction): Directive<HTMLElement> {
   return {
     mounted(el, binding) {
-      const initialValue = binding.value ?? defaultTransform()
-      const { style } = hook(el, toAny({ initialValue }));
+      const transformProps = reactive(binding.value ?? defaultTransform())
+      const { style } = hookFn(el, transformProps, {
+        onChange: (newTransform: Transform) => {
+          Object.assign(transformProps, newTransform)
+        }
+      })
       toAny(el).stop = watchEffect(() => {
         Object.assign(el.style, style.value)
       })

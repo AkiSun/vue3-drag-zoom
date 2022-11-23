@@ -1,7 +1,7 @@
 <h1 align="center">Drag & Zoom toolkit for Vue 3</h1>
 
 ## Features
-- Make element draggable and scalable simply
+- Make element draggable and zoomable simply
 - Out of the box Drag & Zoom components
 - Provides powerful container components
 - Hooks and directives are supported
@@ -29,22 +29,24 @@ createApp(App).use(VueDragZoom).mount('#app')
 Use components or directives in your code
 ```html
 <script setup lang="ts">
-import { reactive } from 'vue'
-const transform = reactive({ x: 100, y: 100 })
+import { ref } from 'vue'
+const transform = ref({ x: 100, y: 100, scale: 1 })
 </script>
 
 <template>
-  <drag-zoom-item :transform="transform">
+  <drag-zoom-item v-model="transform">
     <div class="wrapped-block">
       Drag me! I am at {{ transform.x }}, {{ transform.y }}
     </div>
   </drag-zoom-item>
 </template>
 ```
+Use directives in a simple scene, do not use them with Vue list rendering, do not use them in DragZoomContainer component too.
+
 ```html
 <script setup lang="ts">
-import { reactive } from 'vue'
-const transform = reactive({ x: 100, y: 100 })
+import { ref } from 'vue'
+const transform = ref({ x: 100, y: 100, scale: 1 })
 </script>
 
 <template>
@@ -53,7 +55,7 @@ const transform = reactive({ x: 100, y: 100 })
   </div>
 </template>
 ```
-Hooks must be imported manually
+Hooks must be imported manually, you can customize your custom components by setting the hooks option.
 ```html 
 <script setup lang="ts">
 import { ref } from 'vue'

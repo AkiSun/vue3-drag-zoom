@@ -1,48 +1,60 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { useDragZoom } from '../hooks'
-import { Position, Transform, Range } from '../types'
+import { Transform, Range } from '../types'
 import { defaultRange } from '../utils'
 
 
 export interface DraggableProps {
-  transform: Transform,
-  dragHandleClass?: string,
-  draggable?: boolean,
-  scalable?: boolean,
+  modelValue: Transform
+  dragButton?: number
+  dragHandleClass?: string
+  dragPreventClass?: string
+  draggable?: boolean
+  zoomable?: boolean
   zoomRange?: Range
 }
 const props = withDefaults(defineProps<DraggableProps>(), {
   draggable: true,
-  scalable: false,
+  zoomable: false,
   zoomRange: () => defaultRange()
 })
 const emit = defineEmits<{
-  (e: 'drag-start', pos: Position, event: MouseEvent): void,
-  (e: 'drag-move', pos: Position, delta: Position, event: MouseEvent): void,
-  (e: 'drag-end', pos: Position, event: MouseEvent): void,
-  (e: 'zoom', scale: number, event: WheelEvent): void,
+  (e: 'drag-start', event: MouseEvent): void
+  (e: 'drag-move', newTransform: Transform, event: MouseEvent): void
+  (e: 'drag-end', event: MouseEvent): void
+  (e: 'zoom', newTransform: Transform, event: WheelEvent): void
+  (e: 'change', newTransform: Transform): void
+  (e: 'update:modelValue', transform: Transform): void
 }>()
 
 const el = ref()
-const { style } = useDragZoom(el, {
-  initialValue: props.transform,
-  zoomRange: props.zoomRange,
+const { style, isDragging } = useDragZoom(el, () => props.modelValue, {
   dragHandleClass: props.dragHandleClass,
-  onDragStart: (pos, event) => {
+  dragPreventClass: props.dragPreventClass,
+  zoomRange: props.zoomRange,
+  onDragStart: (event) => {
     if (!props.draggable) return false
-    emit('drag-start', pos, event)
+    emit('drag-start', event)
   },
-  onDragMove: (pos, delta, event) => {
-    emit('drag-move', pos, delta, event)
+  onDragMove: (newTransform, event) => {
+    emit('drag-move', newTransform, event)
   },
-  onDragEnd: (pos, event) => {
-    emit('drag-end', pos, event)
+  onDragEnd: (event) => {
+    emit('drag-end', event)
   },
-  onZoom: (scale, event) => {
-    if (!props.scalable) return false
-    emit('zoom', scale, event)
+  onZoom: (newTransform, event) => {
+    if (!props.zoomable) return
+    emit('zoom', newTransform, event)
+  },
+  onChange: (newTransform) => {
+    emit('change', newTransform)
+    emit('update:modelValue', newTransform)
   }
+})
+
+defineExpose({
+  isDragging
 })
 
 
