@@ -1,5 +1,5 @@
 # useDragZoom
-Make elements draggable and scalable.
+Make elements draggable and zoomable.
 
 ## Basic usage
 ```html 
@@ -8,8 +8,11 @@ import { ref } from 'vue'
 import { useDragZoom } from 'vue3-drag-zoom'
 
 const el = ref()
-const { style, transform } = useDragZoom(el, {
-  initialValue: { x: 100, y: 100 }
+const transform = ref({ x: 0, y: 0, scale: 1 })
+const { style } = useDragZoom(el, transform, {
+  onChange: (newTransform) => {
+    transform.value = newTransform
+  }
 })
 </script>
 
@@ -25,19 +28,18 @@ const { style, transform } = useDragZoom(el, {
 ```ts
 export interface UseDragZoomOption {
   // extends from UserDragOption
-  initialValue?: Transform
+  triggerElement?: MaybeRef<HTMLElement | undefined>
   parentTransform?: Transform
-  otherStyle?: MaybeComputedRef<CSSProperties>
-  triggerElement?: ElementRef
-  dragButton?: number
+  dragButton?: 0 | 1 | 2
   dragHandleClass?: string
   dragPreventClass?: string
-  onDragStart?: { (pos: Position, event: MouseEvent): void | false }
-  onDragMove?: { (pos: Position, delta: Position, event: MouseEvent): void }
-  onDragEnd?: { (pos: Position, event: MouseEvent): void }
+  onChange?: { (newTransform: Transform): void }
+  onDragStart?: { (event: MouseEvent): void | false }
+  onDragMove?: { (newTransform: Transform, event: MouseEvent): void }
+  onDragEnd?: { (event: MouseEvent): void }
 
   // zoom interface
   zoomRange?: Range
-  onZoom?: { (scale: number, event: WheelEvent): void | false }
+  onZoom?: { (newTransform: Transform, event: WheelEvent): void }
 }
 ```

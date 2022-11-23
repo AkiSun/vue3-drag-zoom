@@ -1,16 +1,16 @@
 # DragZoomContainer
-Container that provides a draggable and scalable layout view, draggable components can also be used in this container.
+Container that provides a draggable and zoomable layout view, draggable components can also be used in this container.
 
 ## Basic usage
-The contents in the container can be dragged and scaled freely, following code creates a simple picture browsing viewport.
+The contents in the container can be dragged and zoomed freely, following code creates a simple picture browsing viewport.
 ```html
 <script setup lang="ts">
-import { reactive } from 'vue'
-const viewTransform = reactive({ x: 100, y: 100 })
+import { ref } from 'vue'
+const viewTransform = ref({ x: 0, y: 0, scale: 1 })
 </script>
 
 <template>
-  <drag-zoom-container class="viewport" :view-transform="viewTransform">
+  <drag-zoom-container class="viewport" v-model="viewTransform">
     <img src="image.jpg" :draggable="false" />
   </drag-zoom-container>
 </template>
@@ -29,8 +29,8 @@ const viewTransform = reactive({ x: 100, y: 100 })
 Set the maximum, minimum and change step of the viewport zoom range.
 ```html
 <drag-zoom-container
-  class="view-port"
-  :view-transform="viewTransform"
+  class="viewport"
+  v-model="viewTransform"
   :zoom-range="{ max: 2, min: 0.5, step: 0.5 }"
 >
   <img src="image.jpg" :draggable="false" />
@@ -40,11 +40,10 @@ Set the maximum, minimum and change step of the viewport zoom range.
 ## Fixed slot
 Place elements that do not need to be dragged, such as UI buttons.
 ```html
-<drag-zoom-container
-  class="view-port" :view-transform="viewTransform">
+<drag-zoom-container class="viewport" v-model="viewTransform">
   <template #fixed>
     <div style="left: 20px; top: 20px; position: absolute;">
-      <button @click="Object.assign(viewTransform, defaultTransform())">
+      <button @click="viewTransform = defaultTransform()">
         reset
       </button>
     </div>
@@ -57,10 +56,10 @@ Place elements that do not need to be dragged, such as UI buttons.
 Use Draggable in Container, child elements and container views can be dragged and zoomed respectively.
 ```html
 <script setup lang="ts">
-import { reactive } from 'vue'
+import { ref, reactive } from 'vue'
 import { defaultTransform } from 'vue3-drag-zoom'
 
-const viewTransform = reactive(defaultTransform())
+const viewTransform = ref(defaultTransform())
 const items = reactive([
   { id: 0, transform: { x: 250, y: 100 } },
   { id: 1, transform: { x: 100, y: 200 } },
@@ -69,8 +68,8 @@ const items = reactive([
 </script>
 
 <template>
-  <drag-zoom-container class="viewport" :view-transform="viewTransform">
-    <drag-zoom-item class="draggable" v-for="item in items" :transform="item.transform">
+  <drag-zoom-container class="viewport" v-model="viewTransform">
+    <drag-zoom-item class="draggable" v-for="item in items" v-model="item.transform">
       👋Drag item #{{item.id}}
       <div style="color: gray;">
         I am at {{ item.transform.x }}, {{ item.transform.y }}
@@ -99,13 +98,19 @@ const items = reactive([
 ## Attributes
 |Name|Description|Type|Default|
 |---|---|---|---|
-|viewTransform|transform of the view inside the container|`Transform`|{ x: 0, y: 0, scale: 1 }|
-|zoomRange|zoom range of the view inside the container|`Range`|—|
+|modelValue|transform of the element|`Transform`|—|
+|drag-button|button type of drag event|`0 \| 1 \| 2` |0|
+|drag-handle-class|class name of the drag handle|`string`|—|
+|drag-prevent-class|class name of the drag prevent|`string`|"drag-prevent"|
+|draggable|draggable swtich|`boolean`|true|
+|zoomable|zoomable switch|`boolean`|true|
+|zoom-range|zoom range of the element|`Range`|{ min: 0.4, max: 2.0, step: 0.2 }|
 
 ## Events
 |Name|Description|Parameters|
 |---|---|---|
-|drag-start|triggers when mouse press down|pos: `Position`, event: `MouseEvent`|
-|drag-move|triggers when element is dragging|pos: `Position`, delta: `Position`, event: `MouseEvent`|
-|drag-end|triggers when mouse release up|pos: `Position`, event: `MouseEvent`|
-|zoom|triggers when element is zooming|scale: `number`, event: `WheelEvent`|
+|drag-start|triggers when mouse press down|event: `MouseEvent`|
+|drag-move|triggers when element is dragging|newTransform: `Transform`, event: `MouseEvent`|
+|drag-end|triggers when mouse release up|event: `MouseEvent`|
+|zoom|triggers when element is zooming|newTransform: `Transform`, event: `WheelEvent`|
+|change|triggers when transform changed|newTransform: `Transform`|

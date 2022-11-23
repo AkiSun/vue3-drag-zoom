@@ -1,68 +1,72 @@
-import { reactive, ref, computed, onMounted, onBeforeUnmount, getCurrentInstance, inject } from 'vue'
-import { ElementRef, MaybeComputedRef, Position, Transform } from '../types'
-import { unref, defaultPosition, defaultTransform } from '../utils'
+import { ref, onMounted, onBeforeUnmount, getCurrentInstance, inject, computed } from 'vue'
+import { MaybeComputedRef, MaybeRef, Transform } from '../types'
+import { unref } from '../utils'
 
 
 export interface UseDragOption {
-  initialValue?: Transform
+  triggerElement?: MaybeRef<HTMLElement | undefined>
   parentTransform?: Transform
-  otherStyle?: MaybeComputedRef<Object>
-  triggerElement?: ElementRef
-  dragButton?: number
+  dragButton?: 0 | 1 | 2
   dragHandleClass?: string
   dragPreventClass?: string
-  onDragStart?: { (pos: Position, event: MouseEvent): void | false }
-  onDragMove?: { (pos: Position, delta: Position, event: MouseEvent): void }
-  onDragEnd?: { (pos: Position, event: MouseEvent): void }
+  onChange?: { (newTransform: Transform): void }
+  onDragStart?: { (event: MouseEvent): void | false }
+  onDragMove?: { (newTransform: Transform, event: MouseEvent): void }
+  onDragEnd?: { (event: MouseEvent): void }
 }
 
-export function useDrag(el: ElementRef, option: UseDragOption = {}) {
-  const deltaPosition = reactive<Position>(defaultPosition())
-  const transform = reactive<Transform>(option.initialValue ?? defaultTransform())
-  const trigger = option.triggerElement ?? el
+export function useDrag(
+  el: MaybeRef<HTMLElement | undefined>, 
+  transformProps: MaybeComputedRef<Transform>, 
+  option: UseDragOption = {}
+) {
+  const triggerElement = option.triggerElement ?? el
   const dragButton = option.dragButton ?? 0
   const dragPreventClass = option.dragPreventClass ?? 'drag-prevent'
   const isDragging = ref(false)
   let parentTransform = option.parentTransform
 
-  const style = computed(() => ({
-    transform: `translate(${transform.x}px,${transform.y}px) scale(${transform.scale ?? 1})`,
-    ...unref(option.otherStyle)
-  }))
+  const style = computed(() => {
+    const { x, y, scale } = unref(transformProps)
+    return { transform: `translate(${x}px,${y}px) scale(${scale})` }
+  })
 
-  const onMousedown = (mousedownEvent: MouseEvent) => {
-    if (mousedownEvent.button !== dragButton) return
-    if ((mousedownEvent.target as HTMLElement).className.includes(dragPreventClass)) return
-    if (option.dragHandleClass && !(mousedownEvent.target as HTMLElement).className.includes(option.dragHandleClass)) return
-    if (option.onDragStart?.(transform, mousedownEvent) === false) return
+  const onMousedown = (e: MouseEvent) => {
+    if (e.button !== dragButton) return
+    if ((e.target as HTMLElement).className.includes(dragPreventClass)) return
+    if (option.dragHandleClass && !(e.target as HTMLElement).className.includes(option.dragHandleClass)) return
+    if (option.onDragStart?.(e) === false) return
 
     isDragging.value = true
     const prevMousePos = {
-      x: mousedownEvent.clientX,
-      y: mousedownEvent.clientY
+      x: e.clientX,
+      y: e.clientY
     }
 
     const onMousemove = (e: MouseEvent) => {
       if (!isDragging.value) return
-      deltaPosition.x = e.clientX - prevMousePos.x
-      deltaPosition.y = e.clientY - prevMousePos.y
-      if (parentTransform?.scale) {
-        deltaPosition.x /= parentTransform.scale
-        deltaPosition.y /= parentTransform.scale
+      let deltaX = e.clientX - prevMousePos.x
+      let deltaY = e.clientY - prevMousePos.y
+      if (parentTransform) {
+        const { scale } = unref(parentTransform)
+        deltaX /= scale
+        deltaY /= scale
       }
       prevMousePos.x = e.clientX
       prevMousePos.y = e.clientY
-      transform.x += deltaPosition.x
-      transform.y += deltaPosition.y
 
-      option.onDragMove?.(transform, deltaPosition, e)
+      let { x, y, scale } = unref(transformProps)
+      x += deltaX
+      y += deltaY
+      option.onDragMove?.({ x, y, scale }, e)
+      option.onChange?.({ x, y, scale })
     }
   
     const onMouseup = (e: MouseEvent) => {
       if (!isDragging.value) return
       isDragging.value = false
 
-      option.onDragEnd?.(transform, e)
+      option.onDragEnd?.(e)
 
       document.removeEventListener('mousemove', onMousemove)
       document.removeEventListener('mouseup', onMouseup)
@@ -70,7 +74,7 @@ export function useDrag(el: ElementRef, option: UseDragOption = {}) {
 
     document.addEventListener('mousemove', onMousemove)
     document.addEventListener('mouseup', onMouseup)
-    mousedownEvent.stopPropagation()
+    e.stopPropagation()
   }
 
   if (getCurrentInstance()) {
@@ -78,24 +82,22 @@ export function useDrag(el: ElementRef, option: UseDragOption = {}) {
       parentTransform = inject<Transform | undefined>('PARENT_TRANSFORM', undefined)
     }
     onMounted(() => {
-      unref(trigger)?.addEventListener('mousedown', onMousedown)
+      unref(triggerElement)?.addEventListener('mousedown', onMousedown)
       unref(el)!.style.position = 'absolute'
     })
     onBeforeUnmount(() => {
       unref(el)?.removeEventListener('mousedown', onMousedown)
     })
   } else {
-    unref(trigger)?.addEventListener('mousedown', onMousedown)
+    unref(triggerElement)?.addEventListener('mousedown', onMousedown)
     unref(el)!.style.position = 'absolute'
   }
 
   return {
-    deltaPosition,
-    transform,
+    triggerElement,
     parentTransform,
     isDragging,
-    style,
-    trigger
+    style
   }
 }
 

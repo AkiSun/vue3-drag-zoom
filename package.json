@@ -1,7 +1,7 @@
 {
   "name": "vue3-drag-zoom",
   "private": false,
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "A Drag & Zoom toolkit for Vue 3",
   "author": "AkiSun",
   "license": "MIT",
