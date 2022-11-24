@@ -1,7 +1,7 @@
 {
   "name": "vue3-drag-zoom",
   "private": false,
-  "version": "1.0.5",
+  "version": "1.0.6",
   "description": "A Drag & Zoom toolkit for Vue 3",
   "author": "AkiSun",
   "license": "MIT",
@@ -22,7 +22,12 @@
       "require": "./dist/vue3-drag-zoom.umd.js"
     }
   },
-  "keywords": ["vue3", "typescript", "drag", "zoom"],
+  "keywords": [
+    "vue3",
+    "typescript",
+    "drag",
+    "zoom"
+  ],
   "type": "module",
   "scripts": {
     "dev": "vite",
