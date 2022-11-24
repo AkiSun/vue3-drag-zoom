@@ -6,7 +6,7 @@ import { useDrag, UseDragOption } from './use-drag'
 
 export interface UseDragZoomOption extends UseDragOption {
   zoomRange?: Range
-  onZoom?: { (newTransform: Transform, event: WheelEvent): void }
+  onZoom?: { (newTransform: Transform, event: WheelEvent): void | false }
 }
 
 export function useDragZoom(
@@ -38,8 +38,7 @@ export function useDragZoom(
       scale += deltaScale
     }
 
-    option.onZoom?.({ x, y, scale }, event)
-    option.onChange?.({ x, y, scale })
+    if(option.onZoom?.({ x, y, scale }, event) === false) return
 
     event.stopPropagation()
     event.preventDefault()

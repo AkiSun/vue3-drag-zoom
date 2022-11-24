@@ -11,7 +11,10 @@ function makeDirective(hookFn: HookFunction): Directive<HTMLElement> {
     mounted(el, binding) {
       const transformProps = reactive(binding.value ?? defaultTransform())
       const { style } = hookFn(el, transformProps, {
-        onChange: (newTransform: Transform) => {
+        onDragMove: (newTransform: Transform) => {
+          Object.assign(transformProps, newTransform)
+        },
+        onZoom: (newTransform: Transform) => {
           Object.assign(transformProps, newTransform)
         }
       })
