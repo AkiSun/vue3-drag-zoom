@@ -41,8 +41,8 @@ const transform = ref({ x: 100, y: 100, scale: 1 })
   </drag-zoom-item>
 </template>
 ```
-Use directives in a simple scene, do not use them with Vue list rendering, do not use them in DragZoomContainer component too.
 
+Use directives in a simple scene, do not use them with Vue list rendering, do not use them in DragZoomContainer component too.
 ```html
 <script setup lang="ts">
 import { ref } from 'vue'
@@ -55,6 +55,7 @@ const transform = ref({ x: 100, y: 100, scale: 1 })
   </div>
 </template>
 ```
+
 Hooks must be imported manually, you can customize your custom components by setting the hooks option.
 ```html 
 <script setup lang="ts">
