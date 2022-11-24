@@ -61,9 +61,10 @@ Hooks must be imported manually, you can customize your custom components by set
 import { ref } from 'vue'
 import { useDrag } from 'vue3-drag-zoom'
 
+const transform = ref({ x: 100, y: 100, scale: 1 })
+
 const el = ref()
-const { style, transform } = useDrag(el, {
-  initialValue: { x: 100, y: 100 },
+const { style } = useDrag(el, transform, {
   onDragStart: (pos) => console.log(`drag start at ${pos,x}, ${pos.y}`),
   onDragEnd: (pos) => console.log(`drag end at ${pos.x}, ${pos.y}`)
 })
