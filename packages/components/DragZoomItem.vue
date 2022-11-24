@@ -39,15 +39,15 @@ const { style, isDragging } = useDragZoom(el, () => props.modelValue, {
   },
   onDragMove: (newTransform, event) => {
     emit('drag-move', newTransform, event)
+    emit('change', newTransform)
+    emit('update:modelValue', newTransform)
   },
   onDragEnd: (event) => {
     emit('drag-end', event)
   },
   onZoom: (newTransform, event) => {
-    if (!props.zoomable) return
+    if (!props.zoomable) return false
     emit('zoom', newTransform, event)
-  },
-  onChange: (newTransform) => {
     emit('change', newTransform)
     emit('update:modelValue', newTransform)
   }

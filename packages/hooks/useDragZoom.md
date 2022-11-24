@@ -33,7 +33,6 @@ export interface UseDragZoomOption {
   dragButton?: 0 | 1 | 2
   dragHandleClass?: string
   dragPreventClass?: string
-  onChange?: { (newTransform: Transform): void }
   onDragStart?: { (event: MouseEvent): void | false }
   onDragMove?: { (newTransform: Transform, event: MouseEvent): void }
   onDragEnd?: { (event: MouseEvent): void }
