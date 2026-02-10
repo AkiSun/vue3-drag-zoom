@@ -17,7 +17,7 @@
 - [x] #5 重复代码问题 - [负责人: subagent] - [状态: 已完成 2026-02-10]
 - [x] #6 缺少边界情况处理 - [负责人: subagent] - [状态: 已完成 2026-02-10]
 - [x] #7 Props 类型已导出 - [负责人: subagent] - [状态: 已完成 2026-02-10]
-- [ ] #8 未使用 templateRef - [负责人: subagent] - [状态: 待开始]
+- [x] #8 使用 templateRef 优化 ref 获取方式 - [负责人: subagent] - [状态: 已完成 2026-02-10]
 
 ## P2 - 一般改进
 - [ ] #9 缺少 ESLint/Prettier - [负责人: subagent] - [状态: 待开始]

@@ -28,7 +28,8 @@ const emit = defineEmits<{
   (e: 'update:modelValue', transform: Transform): void
 }>()
 
-const el = ref()
+// 使用 templateRef 方式获取 DOM 元素，提供更好的类型推断
+const el = ref<HTMLElement | null>(null)
 const { style, isDragging } = useDragZoom(el, () => props.modelValue, {
   dragHandleClass: props.dragHandleClass,
   dragPreventClass: props.dragPreventClass,
