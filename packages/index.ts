@@ -8,6 +8,9 @@ import { vDrag, vDragZoom } from './directives'
 import DragZoomItem from './components/DragZoomItem.vue'
 import DragZoomContainer from './components/DragZoomContainer.vue'
 
+// Re-export component props types
+import type { DraggableProps, DragZoomContainerProps } from './component-types'
+
 const install = (app: App) => {
   return app
     .component('DragZoomItem', DragZoomItem)
@@ -35,5 +38,7 @@ export type {
   Transform,
   Range,
   UseDragOption,
-  UseDragZoomOption
+  UseDragZoomOption,
+  DraggableProps,
+  DragZoomContainerProps
 }

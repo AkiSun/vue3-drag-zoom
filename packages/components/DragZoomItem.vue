@@ -4,7 +4,6 @@ import { useDragZoom } from '../hooks'
 import { Transform, Range } from '../types'
 import { defaultRange } from '../utils'
 
-
 export interface DraggableProps {
   modelValue: Transform
   dragButton?: number
@@ -14,6 +13,7 @@ export interface DraggableProps {
   zoomable?: boolean
   zoomRange?: Range
 }
+
 const props = withDefaults(defineProps<DraggableProps>(), {
   draggable: true,
   zoomable: false,

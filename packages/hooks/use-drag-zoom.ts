@@ -6,7 +6,7 @@ import { useDrag, UseDragOption } from './use-drag'
 
 export interface UseDragZoomOption extends UseDragOption {
   zoomRange?: Range
-  onZoom?: { (newTransform: Transform, event: WheelEvent | TouchEvent): void | false }
+  onZoom?: { (newTransform: Transform, event: WheelEvent): void | false }
 }
 
 export function useDragZoom(
@@ -28,8 +28,9 @@ export function useDragZoom(
     deltaScale = fixedScale - scale
     
     // Compute new position of element after scaling
-    if (unref(el)) {
-      const { left, top } = unref(el)!.getBoundingClientRect()
+    const currentEl = unref(el)
+    if (currentEl) {
+      const { left, top } = currentEl.getBoundingClientRect()
       let relativeX = event.clientX - left
       let relativeY = event.clientY - top
       if (parentTransform) {
@@ -84,8 +85,9 @@ export function useDragZoom(
       newScale = clamp(newScale, range.min, range.max)
       const deltaScale = newScale - scale
       
-      if (unref(el)) {
-        const { left, top } = unref(el)!.getBoundingClientRect()
+      const currentEl = unref(el)
+      if (currentEl) {
+        const { left, top } = currentEl.getBoundingClientRect()
         const midpoint = getTouchMidpoint(event.touches)
         let relativeX = midpoint.x - left
         let relativeY = midpoint.y - top
@@ -99,9 +101,16 @@ export function useDragZoom(
         x -= relativeX / scale * deltaScale
         y -= relativeY / scale * deltaScale
         scale = newScale
-      }
+        
+        // Create a synthetic wheel event for onZoom callback consistency
+        const syntheticWheelEvent = new WheelEvent('wheel', {
+          deltaY: Math.log(scaleRatio) * -100,
+          bubbles: true,
+          cancelable: true
+        })
 
-      if(option.onZoom?.({ x, y, scale }, event) === false) return
+        if(option.onZoom?.({ x, y, scale }, syntheticWheelEvent) === false) return
+      }
       
       event.preventDefault()
       event.stopPropagation()
@@ -122,8 +131,11 @@ export function useDragZoom(
       unref(triggerElement)?.addEventListener('touchstart', onTouchstart, { passive: false })
       unref(triggerElement)?.addEventListener('touchmove', onTouchmove, { passive: false })
       unref(triggerElement)?.addEventListener('touchend', onTouchend)
-      unref(el)!.style.position = 'absolute'
-      unref(el)!.style.transformOrigin = '0 0'
+      const currentEl = unref(el)
+      if (currentEl) {
+        currentEl.style.position = 'absolute'
+        currentEl.style.transformOrigin = '0 0'
+      }
     })
     onBeforeUnmount(() => {
       unref(triggerElement)?.removeEventListener('wheel', onWheel)
@@ -136,8 +148,11 @@ export function useDragZoom(
     unref(triggerElement)?.addEventListener('touchstart', onTouchstart, { passive: false })
     unref(triggerElement)?.addEventListener('touchmove', onTouchmove, { passive: false })
     unref(triggerElement)?.addEventListener('touchend', onTouchend)
-    unref(el)!.style.position = 'absolute'
-    unref(el)!.style.transformOrigin = '0 0'
+    const currentEl = unref(el)
+    if (currentEl) {
+      currentEl.style.position = 'absolute'
+      currentEl.style.transformOrigin = '0 0'
+    }
   }
 
   return {

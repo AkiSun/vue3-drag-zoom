@@ -114,7 +114,10 @@ export function useDrag(
     onMounted(() => {
       unref(triggerElement)?.addEventListener('mousedown', onMousedown)
       unref(triggerElement)?.addEventListener('touchstart', onTouchstart, { passive: false })
-      unref(el)!.style.position = 'absolute'
+      const currentEl = unref(el)
+      if (currentEl) {
+        currentEl.style.position = 'absolute'
+      }
     })
     onBeforeUnmount(() => {
       unref(triggerElement)?.removeEventListener('mousedown', onMousedown)
@@ -133,7 +136,10 @@ export function useDrag(
   } else {
     unref(triggerElement)?.addEventListener('mousedown', onMousedown)
     unref(triggerElement)?.addEventListener('touchstart', onTouchstart, { passive: false })
-    unref(el)!.style.position = 'absolute'
+    const currentEl = unref(el)
+    if (currentEl) {
+      currentEl.style.position = 'absolute'
+    }
   }
 
   return {
