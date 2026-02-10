@@ -9,7 +9,7 @@ import DragZoomItem from './components/DragZoomItem.vue'
 import DragZoomContainer from './components/DragZoomContainer.vue'
 
 // Re-export component props types
-import type { DraggableProps, DragZoomContainerProps } from './component-types'
+import type { DraggableProps, DragZoomContainerProps } from './props'
 
 const install = (app: App) => {
   return app

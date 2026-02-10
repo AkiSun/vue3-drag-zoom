@@ -15,11 +15,15 @@
   ],
   "module": "./dist/vue3-drag-zoom.es.js",
   "main": "./dist/vue3-drag-zoom.umd.js",
-  "types": "./dist/typings/packages/index.d.ts",
+  "types": "./typings/packages/index.d.ts",
   "exports": {
     ".": {
       "import": "./dist/vue3-drag-zoom.es.js",
-      "require": "./dist/vue3-drag-zoom.umd.js"
+      "require": "./dist/vue3-drag-zoom.umd.js",
+      "types": "./dist/vue3-drag-zoom.d.ts"
+    },
+    "./props": {
+      "types": "./packages/props.d.ts"
     }
   },
   "keywords": [
