@@ -46,7 +46,7 @@ export function useDragZoom(
 
   if (getCurrentInstance()) {
     onMounted(() => {
-      unref(triggerElement)?.addEventListener('wheel', onWheel)
+      unref(triggerElement)?.addEventListener('wheel', onWheel, { passive: false })
       unref(el)!.style.position = 'absolute'
       unref(el)!.style.transformOrigin = '0 0'
     })
@@ -54,7 +54,7 @@ export function useDragZoom(
       unref(el)?.removeEventListener('wheel', onWheel)
     })
   } else {
-    unref(triggerElement)?.addEventListener('wheel', onWheel)
+    unref(triggerElement)?.addEventListener('wheel', onWheel, { passive: false })
     unref(el)!.style.position = 'absolute'
     unref(el)!.style.transformOrigin = '0 0'
   }

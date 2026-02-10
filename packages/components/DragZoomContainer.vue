@@ -20,9 +20,9 @@ const props = withDefaults(defineProps<DragZoomContainerProps>(), {
   zoomRange: () => defaultRange()
 })
 const emit = defineEmits<{
-  (e: 'drag-start', event: MouseEvent): void
-  (e: 'drag-move', newTransform: Transform, event: MouseEvent): void
-  (e: 'drag-end', event: MouseEvent): void
+  (e: 'drag-start', event: MouseEvent | TouchEvent): void
+  (e: 'drag-move', newTransform: Transform, event: MouseEvent | TouchEvent): void
+  (e: 'drag-end', event: MouseEvent | TouchEvent): void
   (e: 'zoom', newTransform: Transform, event: WheelEvent): void
   (e: 'change', newTransform: Transform): void
   (e: 'update:modelValue', transform: Transform): void
