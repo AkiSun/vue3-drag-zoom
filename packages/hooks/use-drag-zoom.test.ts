@@ -118,4 +118,62 @@ describe('use-drag-zoom', () => {
       expect(removeSpy).toHaveBeenCalledWith('wheel', expect.any(Function))
     })
   })
+
+  describe('1.4 Boundary Handling', () => {
+    it('should clamp zoom scale within zoomRange limits', async () => {
+      const el = ref<HTMLElement>(container)
+      let lastTransform: Transform | null = null
+
+      const TestComponent = {
+        template: '<div ref="element"></div>',
+        setup() {
+          useDragZoom(el, transform, {
+            zoomRange: { min: 0.5, max: 2.0, step: 0.1 },
+            onZoom: (t) => {
+              lastTransform = t
+            }
+          })
+          return {}
+        }
+      }
+
+      wrapper = mount(TestComponent, { attachTo: container })
+      const element = wrapper.vm.$el as HTMLElement
+
+      // Zoom in beyond max
+      const wheelEvent = new WheelEvent('wheel', {
+        bubbles: true,
+        cancelable: true,
+        deltaY: -1000 // Large negative to zoom in a lot
+      })
+      element.dispatchEvent(wheelEvent)
+
+      // Verify scale was clamped
+      expect(lastTransform).not.toBeNull()
+      if (lastTransform) {
+        expect(lastTransform.scale).toBeLessThanOrEqual(2.0)
+        expect(lastTransform.scale).toBeGreaterThanOrEqual(0.5)
+      }
+    })
+
+    it('should handle undefined element gracefully', async () => {
+      const el = ref<HTMLElement | undefined>(undefined)
+      let noError = true
+
+      const TestComponent = {
+        template: '<div></div>',
+        setup() {
+          try {
+            useDragZoom(el, transform)
+          } catch (e) {
+            noError = false
+          }
+          return {}
+        }
+      }
+
+      wrapper = mount(TestComponent, { attachTo: container })
+      expect(noError).toBe(true)
+    })
+  })
 })

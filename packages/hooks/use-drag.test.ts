@@ -184,4 +184,78 @@ describe('use-drag', () => {
       expect(removeSpy).toHaveBeenCalledWith('touchstart', expect.any(Function))
     })
   })
+
+  describe('1.3 Boundary Handling', () => {
+    it('should constrain drag position within boundary limits', async () => {
+      const el = ref<HTMLElement>(container)
+      let lastTransform: Transform | null = null
+
+      const TestComponent = {
+        template: '<div ref="element"></div>',
+        setup() {
+          useDrag(el, transform, {
+            boundary: {
+              minX: -100,
+              maxX: 100,
+              minY: -100,
+              maxY: 100
+            },
+            onDragMove: (t) => {
+              lastTransform = t
+            }
+          })
+          return {}
+        }
+      }
+
+      wrapper = mount(TestComponent, { attachTo: container })
+      const element = wrapper.vm.$el as HTMLElement
+
+      // Simulate drag that would exceed boundary
+      const mousedownEvent = new MouseEvent('mousedown', {
+        bubbles: true,
+        cancelable: true,
+        button: 0
+      })
+      element.dispatchEvent(mousedownEvent)
+
+      // Move mouse far beyond boundary
+      const mousemoveEvent = new MouseEvent('mousemove', {
+        bubbles: true,
+        cancelable: true,
+        clientX: 500,
+        clientY: 500
+      })
+      document.dispatchEvent(mousemoveEvent)
+
+      // Verify position was clamped to boundary
+      expect(lastTransform).not.toBeNull()
+      if (lastTransform) {
+        expect(lastTransform.x).toBeLessThanOrEqual(100)
+        expect(lastTransform.x).toBeGreaterThanOrEqual(-100)
+        expect(lastTransform.y).toBeLessThanOrEqual(100)
+        expect(lastTransform.y).toBeGreaterThanOrEqual(-100)
+      }
+    })
+
+    it('should handle undefined element gracefully', async () => {
+      const el = ref<HTMLElement | undefined>(undefined)
+      let noError = true
+
+      const TestComponent = {
+        template: '<div></div>',
+        setup() {
+          try {
+            useDrag(el, transform)
+          } catch (e) {
+            noError = false
+          }
+          return {}
+        }
+      }
+
+      wrapper = mount(TestComponent, { attachTo: container })
+      expect(noError).toBe(true)
+    })
+  })
 })

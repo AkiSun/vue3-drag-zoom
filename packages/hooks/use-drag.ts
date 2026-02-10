@@ -10,6 +10,12 @@ export interface UseDragOption {
   dragButton?: 0 | 1 | 2
   dragHandleClass?: string
   dragPreventClass?: string
+  boundary?: {
+    minX?: number
+    maxX?: number
+    minY?: number
+    maxY?: number
+  }
   onDragStart?: { (event: MouseEvent | TouchEvent): void | false }
   onDragMove?: { (newTransform: Transform, event: MouseEvent | TouchEvent): void }
   onDragEnd?: { (event: MouseEvent | TouchEvent): void }
@@ -58,8 +64,14 @@ export function useDrag(
       prevMousePos.y = moveEvent.clientY
 
       let { x, y, scale } = unref(transformProps)
-      x += deltaX
-      y += deltaY
+      
+      // Apply boundary constraints
+      const boundary = option.boundary ?? {}
+      if (boundary.minX !== undefined) x = Math.max(x, boundary.minX)
+      if (boundary.maxX !== undefined) x = Math.min(x, boundary.maxX)
+      if (boundary.minY !== undefined) y = Math.max(y, boundary.minY)
+      if (boundary.maxY !== undefined) y = Math.min(y, boundary.maxY)
+      
       option.onDragMove?.({ x, y, scale }, e as MouseEvent | TouchEvent)
     }
 
@@ -119,16 +131,21 @@ export function useDrag(
       parentTransform = inject<Transform | undefined>('PARENT_TRANSFORM', undefined)
     }
     onMounted(() => {
-      unref(triggerElement)?.addEventListener('mousedown', onMousedown)
-      unref(triggerElement)?.addEventListener('touchstart', onTouchstart, { passive: false })
+      const triggerEl = unref(triggerElement)
+      if (!triggerEl) return
+      triggerEl.addEventListener('mousedown', onMousedown)
+      triggerEl.addEventListener('touchstart', onTouchstart, { passive: false })
       const currentEl = unref(el)
       if (currentEl) {
         currentEl.style.position = 'absolute'
       }
     })
     onBeforeUnmount(() => {
-      unref(triggerElement)?.removeEventListener('mousedown', onMousedown)
-      unref(triggerElement)?.removeEventListener('touchstart', onTouchstart)
+      const triggerEl = unref(triggerElement)
+      if (triggerEl) {
+        triggerEl.removeEventListener('mousedown', onMousedown)
+        triggerEl.removeEventListener('touchstart', onTouchstart)
+      }
       
       // Clean up document event listeners in case drag is active
       if (currentOnMove) {
@@ -141,8 +158,10 @@ export function useDrag(
       }
     })
   } else {
-    unref(triggerElement)?.addEventListener('mousedown', onMousedown)
-    unref(triggerElement)?.addEventListener('touchstart', onTouchstart, { passive: false })
+    const triggerEl = unref(triggerElement)
+    if (!triggerEl) return
+    triggerEl.addEventListener('mousedown', onMousedown)
+    triggerEl.addEventListener('touchstart', onTouchstart, { passive: false })
     const currentEl = unref(el)
     if (currentEl) {
       currentEl.style.position = 'absolute'

@@ -135,10 +135,12 @@ export function useDragZoom(
 
   if (getCurrentInstance()) {
     onMounted(() => {
-      unref(triggerElement)?.addEventListener('wheel', onWheel, { passive: false })
-      unref(triggerElement)?.addEventListener('touchstart', onTouchstart, { passive: false })
-      unref(triggerElement)?.addEventListener('touchmove', onTouchmove, { passive: false })
-      unref(triggerElement)?.addEventListener('touchend', onTouchend)
+      const triggerEl = unref(triggerElement)
+      if (!triggerEl) return
+      triggerEl.addEventListener('wheel', onWheel, { passive: false })
+      triggerEl.addEventListener('touchstart', onTouchstart, { passive: false })
+      triggerEl.addEventListener('touchmove', onTouchmove, { passive: false })
+      triggerEl.addEventListener('touchend', onTouchend)
       const currentEl = unref(el)
       if (currentEl) {
         currentEl.style.position = 'absolute'
@@ -146,16 +148,21 @@ export function useDragZoom(
       }
     })
     onBeforeUnmount(() => {
-      unref(triggerElement)?.removeEventListener('wheel', onWheel)
-      unref(triggerElement)?.removeEventListener('touchstart', onTouchstart)
-      unref(triggerElement)?.removeEventListener('touchmove', onTouchmove)
-      unref(triggerElement)?.removeEventListener('touchend', onTouchend)
+      const triggerEl = unref(triggerElement)
+      if (triggerEl) {
+        triggerEl.removeEventListener('wheel', onWheel)
+        triggerEl.removeEventListener('touchstart', onTouchstart)
+        triggerEl.removeEventListener('touchmove', onTouchmove)
+        triggerEl.removeEventListener('touchend', onTouchend)
+      }
     })
   } else {
-    unref(triggerElement)?.addEventListener('wheel', onWheel, { passive: false })
-    unref(triggerElement)?.addEventListener('touchstart', onTouchstart, { passive: false })
-    unref(triggerElement)?.addEventListener('touchmove', onTouchmove, { passive: false })
-    unref(triggerElement)?.addEventListener('touchend', onTouchend)
+    const triggerEl = unref(triggerElement)
+    if (!triggerEl) return
+    triggerEl.addEventListener('wheel', onWheel, { passive: false })
+    triggerEl.addEventListener('touchstart', onTouchstart, { passive: false })
+    triggerEl.addEventListener('touchmove', onTouchmove, { passive: false })
+    triggerEl.addEventListener('touchend', onTouchend)
     const currentEl = unref(el)
     if (currentEl) {
       currentEl.style.position = 'absolute'
