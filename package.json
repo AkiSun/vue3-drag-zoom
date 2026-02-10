@@ -20,7 +20,7 @@
     ".": {
       "import": "./dist/vue3-drag-zoom.es.js",
       "require": "./dist/vue3-drag-zoom.umd.js",
-      "types": "./dist/vue3-drag-zoom.d.ts"
+      "types": "./typings/packages/index.d.ts"
     },
     "./props": {
       "types": "./packages/props.d.ts"
