@@ -25,6 +25,10 @@ export function useDrag(
   const isDragging = ref(false)
   let parentTransform = option.parentTransform
 
+  // Store references to event handlers for cleanup
+  let currentOnMove: ((e: MouseEvent | TouchEvent) => void) | null = null
+  let currentOnEnd: ((e: MouseEvent | TouchEvent) => void) | null = null
+
   const style = computed(() => {
     const { x, y, scale } = unref(transformProps)
     return { transform: `translate(${x}px,${y}px) scale(${scale})` }
@@ -38,7 +42,7 @@ export function useDrag(
       y: clientY
     }
 
-    const onMove = (e: MouseEvent | TouchEvent) => {
+    currentOnMove = (e: MouseEvent | TouchEvent) => {
       if (!isDragging.value) return
       
       const moveEvent = e.type.startsWith('touch') ? (e as TouchEvent).touches[0] : e as MouseEvent
@@ -58,22 +62,28 @@ export function useDrag(
       option.onDragMove?.({ x, y, scale }, e as MouseEvent | TouchEvent)
     }
 
-    const onEnd = (e: MouseEvent | TouchEvent) => {
+    currentOnEnd = (e: MouseEvent | TouchEvent) => {
       if (!isDragging.value) return
       isDragging.value = false
 
       option.onDragEnd?.(e)
 
-      document.removeEventListener('mousemove', onMove)
-      document.removeEventListener('mouseup', onEnd)
-      document.removeEventListener('touchmove', onMove)
-      document.removeEventListener('touchend', onEnd)
+      if (currentOnMove) {
+        document.removeEventListener('mousemove', currentOnMove)
+        document.removeEventListener('touchmove', currentOnMove)
+        currentOnMove = null
+      }
+      if (currentOnEnd) {
+        document.removeEventListener('mouseup', currentOnEnd)
+        document.removeEventListener('touchend', currentOnEnd)
+        currentOnEnd = null
+      }
     }
 
-    document.addEventListener('mousemove', onMove)
-    document.addEventListener('mouseup', onEnd)
-    document.addEventListener('touchmove', onMove)
-    document.addEventListener('touchend', onEnd)
+    document.addEventListener('mousemove', currentOnMove)
+    document.addEventListener('mouseup', currentOnEnd)
+    document.addEventListener('touchmove', currentOnMove)
+    document.addEventListener('touchend', currentOnEnd)
   }
 
   const onMousedown = (e: MouseEvent) => {
@@ -107,8 +117,18 @@ export function useDrag(
       unref(el)!.style.position = 'absolute'
     })
     onBeforeUnmount(() => {
-      unref(el)?.removeEventListener('mousedown', onMousedown)
-      unref(el)?.removeEventListener('touchstart', onTouchstart)
+      unref(triggerElement)?.removeEventListener('mousedown', onMousedown)
+      unref(triggerElement)?.removeEventListener('touchstart', onTouchstart)
+      
+      // Clean up document event listeners in case drag is active
+      if (currentOnMove) {
+        document.removeEventListener('mousemove', currentOnMove)
+        document.removeEventListener('touchmove', currentOnMove)
+      }
+      if (currentOnEnd) {
+        document.removeEventListener('mouseup', currentOnEnd)
+        document.removeEventListener('touchend', currentOnEnd)
+      }
     })
   } else {
     unref(triggerElement)?.addEventListener('mousedown', onMousedown)
