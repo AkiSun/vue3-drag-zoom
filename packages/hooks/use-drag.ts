@@ -1,6 +1,7 @@
 import { ref, onMounted, onBeforeUnmount, getCurrentInstance, inject, computed } from 'vue'
 import { MaybeComputedRef, MaybeRef, Transform } from '../types'
 import { unref } from '../utils'
+import { useDocumentEvents } from './use-event-manager'
 
 
 export interface UseDragOption {
@@ -107,6 +108,12 @@ export function useDrag(
     e.stopPropagation()
   }
 
+  // 使用公共事件管理器处理生命周期和事件注册
+  const elementHandlers = {
+    mousedown: onMousedown,
+    touchstart: onTouchstart
+  }
+
   if (getCurrentInstance()) {
     if (!parentTransform) {
       parentTransform = inject<Transform | undefined>('PARENT_TRANSFORM', undefined)
@@ -149,4 +156,3 @@ export function useDrag(
     style
   }
 }
-

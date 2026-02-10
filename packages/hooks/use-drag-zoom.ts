@@ -125,6 +125,14 @@ export function useDragZoom(
     }
   }
 
+  // 事件处理函数映射
+  const elementHandlers = {
+    wheel: onWheel,
+    touchstart: onTouchstart,
+    touchmove: onTouchmove,
+    touchend: onTouchend
+  }
+
   if (getCurrentInstance()) {
     onMounted(() => {
       unref(triggerElement)?.addEventListener('wheel', onWheel, { passive: false })
@@ -159,4 +167,3 @@ export function useDragZoom(
     ...restStates
   }
 }
-
