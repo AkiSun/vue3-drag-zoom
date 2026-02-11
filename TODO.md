@@ -40,6 +40,6 @@
 每个阶段完成后必须完成：
 
 - [x] 测试验证 - 需添加 Vitest 测试
-- [x] 代码审查 - 代码已提交并推送到 feature/vue3-drag-zoom-improvements 分支（PR 创建失败：缺少 GitHub Token） - 手动创建：https://github.com/AkiSun/vue3-drag-zoom/compare/master...feature/vue3-drag-zoom-improvements?expand=1
+- [x] 代码审查 - PR 已创建 https://github.com/AkiSun/vue3-drag-zoom/pull/7
 - [x] 文档完善 - 更新 README、API 文档
 - [ ] 远程推送 - PR 审核通过后执行

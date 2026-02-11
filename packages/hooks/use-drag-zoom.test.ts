@@ -142,8 +142,8 @@ describe('use-drag-zoom', () => {
       // Verify scale was clamped
       expect(lastTransform).not.toBeNull()
       if (lastTransform) {
-        expect(lastTransform.scale).toBeLessThanOrEqual(2.0)
-        expect(lastTransform.scale).toBeGreaterThanOrEqual(0.5)
+        expect((lastTransform as Transform).scale).toBeLessThanOrEqual(2.0)
+        expect((lastTransform as Transform).scale).toBeGreaterThanOrEqual(0.5)
       }
     })
 
@@ -324,4 +324,3 @@ describe('use-drag-zoom', () => {
     })
   })
 })
-

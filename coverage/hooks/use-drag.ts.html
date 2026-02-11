@@ -23,9 +23,9 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">90.86% </span>
+                <span class="strong">91.17% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>169/186</span>
+                <span class='fraction'>186/204</span>
             </div>
         
             
@@ -44,9 +44,9 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">90.86% </span>
+                <span class="strong">91.17% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>169/186</span>
+                <span class='fraction'>186/204</span>
             </div>
         
             
@@ -249,7 +249,41 @@
 <a name='L184'></a><a href='#L184'>184</a>
 <a name='L185'></a><a href='#L185'>185</a>
 <a name='L186'></a><a href='#L186'>186</a>
-<a name='L187'></a><a href='#L187'>187</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<a name='L187'></a><a href='#L187'>187</a>
+<a name='L188'></a><a href='#L188'>188</a>
+<a name='L189'></a><a href='#L189'>189</a>
+<a name='L190'></a><a href='#L190'>190</a>
+<a name='L191'></a><a href='#L191'>191</a>
+<a name='L192'></a><a href='#L192'>192</a>
+<a name='L193'></a><a href='#L193'>193</a>
+<a name='L194'></a><a href='#L194'>194</a>
+<a name='L195'></a><a href='#L195'>195</a>
+<a name='L196'></a><a href='#L196'>196</a>
+<a name='L197'></a><a href='#L197'>197</a>
+<a name='L198'></a><a href='#L198'>198</a>
+<a name='L199'></a><a href='#L199'>199</a>
+<a name='L200'></a><a href='#L200'>200</a>
+<a name='L201'></a><a href='#L201'>201</a>
+<a name='L202'></a><a href='#L202'>202</a>
+<a name='L203'></a><a href='#L203'>203</a>
+<a name='L204'></a><a href='#L204'>204</a>
+<a name='L205'></a><a href='#L205'>205</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
@@ -312,6 +346,7 @@
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-yes">2x</span>
@@ -427,6 +462,7 @@
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-yes">17x</span>
 <span class="cline-any cline-yes">17x</span>
 <span class="cline-any cline-yes">17x</span>
@@ -435,7 +471,16 @@
 <span class="cline-any cline-yes">17x</span>
 <span class="cline-any cline-yes">17x</span>
 <span class="cline-any cline-yes">17x</span>
-<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { ref, onMounted, onBeforeUnmount, getCurrentInstance, inject, computed } from 'vue'
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import {
+  ref,
+  onMounted,
+  onBeforeUnmount,
+  getCurrentInstance,
+  inject,
+  computed,
+  Ref,
+  ComputedRef
+} from 'vue'
 import { MaybeComputedRef, MaybeRef, Transform } from '../types'
 import { unref } from '../utils'
 import { useDocumentEvents } from './use-event-manager'
@@ -457,11 +502,18 @@ export interface UseDragOption {
   onDragEnd?: { (event: MouseEvent | TouchEvent): void }
 }
 &nbsp;
+export interface UseDragResult {
+  triggerElement: MaybeRef&lt;HTMLElement | undefined&gt;
+  parentTransform: Transform | undefined
+  isDragging: Ref&lt;boolean&gt;
+  style: any
+}
+&nbsp;
 export function useDrag(
   el: MaybeRef&lt;HTMLElement | undefined&gt;,
   transformProps: MaybeComputedRef&lt;Transform&gt;,
   option: UseDragOption = {}
-) {
+): UseDragResult {
   const triggerElement = option.triggerElement ?? el
   const dragButton = option.dragButton ?? 0
   const dragPreventClass = option.dragPreventClass ?? 'drag-prevent'
@@ -474,7 +526,7 @@ export function useDrag(
 &nbsp;
   const style = computed(() =&gt; {
 <span class="cstat-no" title="statement not covered" >    const { x, y, scale } = unref(transformProps)</span>
-<span class="cstat-no" title="statement not covered" >    return { transform: `translate(${x}px,${y}px) scale(${scale})` }</span>
+<span class="cstat-no" title="statement not covered" >    return `transform: translate(${x}px, ${y}px) scale(${scale});`</span>
   })
 &nbsp;
   // Unified handler for both mouse and touch events
@@ -501,7 +553,8 @@ export function useDrag(
       prevMousePos.x = moveEvent.clientX
       prevMousePos.y = moveEvent.clientY
 &nbsp;
-      let { x, y, scale } = unref(transformProps)
+      let { x, y } = unref(transformProps)
+      const { scale } = unref(transformProps)
 &nbsp;
       // Apply boundary constraints
       const boundary = option.boundary ?? {}
@@ -605,12 +658,13 @@ export function useDrag(
     })
 <span class="branch-0 cbranch-no" title="branch not covered" >  } else {</span>
 <span class="cstat-no" title="statement not covered" >    const triggerEl = unref(triggerElement)</span>
-<span class="cstat-no" title="statement not covered" >    if (!triggerEl) return</span>
-<span class="cstat-no" title="statement not covered" >    triggerEl.addEventListener('mousedown', onMousedown)</span>
-<span class="cstat-no" title="statement not covered" >    triggerEl.addEventListener('touchstart', onTouchstart, { passive: false })</span>
-<span class="cstat-no" title="statement not covered" >    const currentEl = unref(el)</span>
-<span class="cstat-no" title="statement not covered" >    if (currentEl) {</span>
-<span class="cstat-no" title="statement not covered" >      currentEl.style.position = 'absolute'</span>
+<span class="cstat-no" title="statement not covered" >    if (triggerEl) {</span>
+<span class="cstat-no" title="statement not covered" >      triggerEl.addEventListener('mousedown', onMousedown)</span>
+<span class="cstat-no" title="statement not covered" >      triggerEl.addEventListener('touchstart', onTouchstart, { passive: false })</span>
+<span class="cstat-no" title="statement not covered" >      const currentEl = unref(el)</span>
+<span class="cstat-no" title="statement not covered" >      if (currentEl) {</span>
+<span class="cstat-no" title="statement not covered" >        currentEl.style.position = 'absolute'</span>
+<span class="cstat-no" title="statement not covered" >      }</span>
 <span class="cstat-no" title="statement not covered" >    }</span>
 <span class="cstat-no" title="statement not covered" >  }</span>
 &nbsp;
@@ -628,7 +682,7 @@ export function useDrag(
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2026-02-11T08:10:24.802Z
+                at 2026-02-11T09:45:24.285Z
             </div>
         <script src="../prettify.js"></script>
         <script>

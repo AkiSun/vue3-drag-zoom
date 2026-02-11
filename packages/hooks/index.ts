@@ -1,5 +1,5 @@
-import { useDrag, UseDragOption } from './use-drag'
-import { useDragZoom, UseDragZoomOption } from './use-drag-zoom'
+import { useDrag, UseDragOption, UseDragResult } from './use-drag'
+import { useDragZoom, UseDragZoomOption, UseDragZoomResult } from './use-drag-zoom'
 
 export { useDrag, useDragZoom }
-export type { UseDragOption, UseDragZoomOption }
+export type { UseDragOption, UseDragResult, UseDragZoomOption, UseDragZoomResult }

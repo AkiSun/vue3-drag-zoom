@@ -70,9 +70,13 @@ describe('use-event-manager', () => {
       const TestComponent = {
         template: '<div ref="element"></div>',
         setup() {
-          useEventManager(el, {}, {
-            style: { position: 'absolute', transformOrigin: '0 0' }
-          })
+          useEventManager(
+            el,
+            {},
+            {
+              style: { position: 'absolute', transformOrigin: '0 0' }
+            }
+          )
           return {}
         }
       }
@@ -91,11 +95,15 @@ describe('use-event-manager', () => {
       const TestComponent = {
         template: '<div ref="element"></div>',
         setup() {
-          useEventManager(el, {
-            wheel: wheelHandler
-          }, {
-            wheelPassive: false
-          })
+          useEventManager(
+            el,
+            {
+              wheel: wheelHandler
+            },
+            {
+              wheelPassive: false
+            }
+          )
           return {}
         }
       }
@@ -117,11 +125,15 @@ describe('use-event-manager', () => {
       const TestComponent = {
         template: '<div ref="element"></div>',
         setup() {
-          useEventManager(el, {
-            touchstart: touchHandler
-          }, {
-            touchPassive: true
-          })
+          useEventManager(
+            el,
+            {
+              touchstart: touchHandler
+            },
+            {
+              touchPassive: true
+            }
+          )
           return {}
         }
       }
@@ -169,14 +181,17 @@ describe('use-event-manager', () => {
           })
           return { result }
         }
-      }
+      } as { setup(): { result: ReturnType<typeof useEventManager> } }
 
+      // @ts-expect-error - mount attachTo type mismatch
       wrapper = mount(TestComponent, { attachTo: container })
 
-      expect(wrapper.vm.result).toBeDefined()
-      expect(wrapper.vm.result.element).toBe(container)
-      expect(typeof wrapper.vm.result.registerEvent).toBe('function')
-      expect(typeof wrapper.vm.result.unregisterEvent).toBe('function')
+      // @ts-expect-error - Vue Test Utils wrapper type
+      const result = wrapper.vm.result
+      expect(result).toBeDefined()
+      expect(result.element).toBe(container)
+      expect(typeof result.registerEvent).toBe('function')
+      expect(typeof result.unregisterEvent).toBe('function')
     })
   })
 

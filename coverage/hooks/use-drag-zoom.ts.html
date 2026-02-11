@@ -23,9 +23,9 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">61.14% </span>
+                <span class="strong">62.08% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>107/175</span>
+                <span class='fraction'>113/182</span>
             </div>
         
             
@@ -44,9 +44,9 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">61.14% </span>
+                <span class="strong">62.08% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>107/175</span>
+                <span class='fraction'>113/182</span>
             </div>
         
             
@@ -238,7 +238,14 @@
 <a name='L173'></a><a href='#L173'>173</a>
 <a name='L174'></a><a href='#L174'>174</a>
 <a name='L175'></a><a href='#L175'>175</a>
-<a name='L176'></a><a href='#L176'>176</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<a name='L176'></a><a href='#L176'>176</a>
+<a name='L177'></a><a href='#L177'>177</a>
+<a name='L178'></a><a href='#L178'>178</a>
+<a name='L179'></a><a href='#L179'>179</a>
+<a name='L180'></a><a href='#L180'>180</a>
+<a name='L181'></a><a href='#L181'>181</a>
+<a name='L182'></a><a href='#L182'>182</a>
+<a name='L183'></a><a href='#L183'>183</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
@@ -249,6 +256,9 @@
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">10x</span>
 <span class="cline-any cline-yes">10x</span>
 <span class="cline-any cline-yes">10x</span>
 <span class="cline-any cline-yes">10x</span>
@@ -408,6 +418,10 @@
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">10x</span>
+<span class="cline-any cline-yes">10x</span>
+<span class="cline-any cline-yes">10x</span>
 <span class="cline-any cline-yes">10x</span>
 <span class="cline-any cline-yes">10x</span>
 <span class="cline-any cline-yes">10x</span>
@@ -416,19 +430,22 @@
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { onMounted, onBeforeUnmount, getCurrentInstance, reactive } from 'vue'
 import { MaybeComputedRef, MaybeRef, Transform, Range } from '../types'
 import { unref, clamp, defaultRange } from '../utils'
-import { useDrag, UseDragOption } from './use-drag'
+import { useDrag, UseDragOption, UseDragResult } from './use-drag'
 &nbsp;
 export interface UseDragZoomOption extends UseDragOption {
   zoomRange?: Range
   onZoom?: { (newTransform: Transform, event: WheelEvent): void | false }
 }
 &nbsp;
+export interface UseDragZoomResult extends UseDragResult {}
+&nbsp;
 export function useDragZoom(
   el: MaybeRef&lt;HTMLElement | undefined&gt;,
   transformProps: MaybeComputedRef&lt;Transform&gt;,
   option: UseDragZoomOption = {}
-) {
-  const { triggerElement, parentTransform, ...restStates } = useDrag(el, transformProps, option)
+): UseDragZoomResult {
+  const dragResult = useDrag(el, transformProps, option)
+  const { triggerElement, parentTransform, isDragging, style } = dragResult
   const range = reactive(option.zoomRange ?? defaultRange())
 &nbsp;
   // Pinch-to-zoom state
@@ -572,20 +589,24 @@ export function useDragZoom(
     })
 <span class="branch-0 cbranch-no" title="branch not covered" >  } else {</span>
 <span class="cstat-no" title="statement not covered" >    const triggerEl = unref(triggerElement)</span>
-<span class="cstat-no" title="statement not covered" >    if (!triggerEl) return</span>
-<span class="cstat-no" title="statement not covered" >    triggerEl.addEventListener('wheel', onWheel, { passive: false })</span>
-<span class="cstat-no" title="statement not covered" >    triggerEl.addEventListener('touchstart', onTouchstart, { passive: false })</span>
-<span class="cstat-no" title="statement not covered" >    triggerEl.addEventListener('touchmove', onTouchmove, { passive: false })</span>
-<span class="cstat-no" title="statement not covered" >    triggerEl.addEventListener('touchend', onTouchend)</span>
-<span class="cstat-no" title="statement not covered" >    const currentEl = unref(el)</span>
-<span class="cstat-no" title="statement not covered" >    if (currentEl) {</span>
-<span class="cstat-no" title="statement not covered" >      currentEl.style.position = 'absolute'</span>
-<span class="cstat-no" title="statement not covered" >      currentEl.style.transformOrigin = '0 0'</span>
+<span class="cstat-no" title="statement not covered" >    if (triggerEl) {</span>
+<span class="cstat-no" title="statement not covered" >      triggerEl.addEventListener('wheel', onWheel, { passive: false })</span>
+<span class="cstat-no" title="statement not covered" >      triggerEl.addEventListener('touchstart', onTouchstart, { passive: false })</span>
+<span class="cstat-no" title="statement not covered" >      triggerEl.addEventListener('touchmove', onTouchmove, { passive: false })</span>
+<span class="cstat-no" title="statement not covered" >      triggerEl.addEventListener('touchend', onTouchend)</span>
+<span class="cstat-no" title="statement not covered" >      const currentEl = unref(el)</span>
+<span class="cstat-no" title="statement not covered" >      if (currentEl) {</span>
+<span class="cstat-no" title="statement not covered" >        currentEl.style.position = 'absolute'</span>
+<span class="cstat-no" title="statement not covered" >        currentEl.style.transformOrigin = '0 0'</span>
+<span class="cstat-no" title="statement not covered" >      }</span>
 <span class="cstat-no" title="statement not covered" >    }</span>
 <span class="cstat-no" title="statement not covered" >  }</span>
 &nbsp;
   return {
-    ...restStates
+    triggerElement,
+    parentTransform,
+    isDragging,
+    style
   }
 }
 &nbsp;</pre></td></tr></table></pre>
@@ -595,7 +616,7 @@ export function useDragZoom(
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2026-02-11T08:10:24.802Z
+                at 2026-02-11T09:45:24.285Z
             </div>
         <script src="../prettify.js"></script>
         <script>

@@ -1,19 +1,22 @@
 import { onMounted, onBeforeUnmount, getCurrentInstance, reactive } from 'vue'
 import { MaybeComputedRef, MaybeRef, Transform, Range } from '../types'
 import { unref, clamp, defaultRange } from '../utils'
-import { useDrag, UseDragOption } from './use-drag'
+import { useDrag, UseDragOption, UseDragResult } from './use-drag'
 
 export interface UseDragZoomOption extends UseDragOption {
   zoomRange?: Range
   onZoom?: { (newTransform: Transform, event: WheelEvent): void | false }
 }
 
+export interface UseDragZoomResult extends UseDragResult {}
+
 export function useDragZoom(
   el: MaybeRef<HTMLElement | undefined>,
   transformProps: MaybeComputedRef<Transform>,
   option: UseDragZoomOption = {}
-) {
-  const { triggerElement, parentTransform, ...restStates } = useDrag(el, transformProps, option)
+): UseDragZoomResult {
+  const dragResult = useDrag(el, transformProps, option)
+  const { triggerElement, parentTransform, isDragging, style } = dragResult
   const range = reactive(option.zoomRange ?? defaultRange())
 
   // Pinch-to-zoom state
@@ -157,19 +160,23 @@ export function useDragZoom(
     })
   } else {
     const triggerEl = unref(triggerElement)
-    if (!triggerEl) return
-    triggerEl.addEventListener('wheel', onWheel, { passive: false })
-    triggerEl.addEventListener('touchstart', onTouchstart, { passive: false })
-    triggerEl.addEventListener('touchmove', onTouchmove, { passive: false })
-    triggerEl.addEventListener('touchend', onTouchend)
-    const currentEl = unref(el)
-    if (currentEl) {
-      currentEl.style.position = 'absolute'
-      currentEl.style.transformOrigin = '0 0'
+    if (triggerEl) {
+      triggerEl.addEventListener('wheel', onWheel, { passive: false })
+      triggerEl.addEventListener('touchstart', onTouchstart, { passive: false })
+      triggerEl.addEventListener('touchmove', onTouchmove, { passive: false })
+      triggerEl.addEventListener('touchend', onTouchend)
+      const currentEl = unref(el)
+      if (currentEl) {
+        currentEl.style.position = 'absolute'
+        currentEl.style.transformOrigin = '0 0'
+      }
     }
   }
 
   return {
-    ...restStates
+    triggerElement,
+    parentTransform,
+    isDragging,
+    style
   }
 }

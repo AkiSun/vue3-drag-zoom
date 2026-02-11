@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, unref } from 'vue'
 import { useDragZoom } from '../hooks'
 import { Transform, Range } from '../types'
 import { defaultRange } from '../utils'
@@ -29,8 +29,8 @@ const emit = defineEmits<{
 }>()
 
 // 使用 templateRef 方式获取 DOM 元素，提供更好的类型推断
-const el = ref<HTMLElement | null>(null)
-const { style, isDragging } = useDragZoom(el, () => props.modelValue, {
+const el = ref<HTMLElement | undefined>(undefined)
+const dragZoomResult = useDragZoom(unref(el), () => props.modelValue, {
   dragHandleClass: props.dragHandleClass,
   dragPreventClass: props.dragPreventClass,
   zoomRange: props.zoomRange,
@@ -55,12 +55,12 @@ const { style, isDragging } = useDragZoom(el, () => props.modelValue, {
 })
 
 defineExpose({
-  isDragging
+  isDragging: dragZoomResult.isDragging
 })
 </script>
 
 <template>
-  <div ref="el" class="vdz_draggable" :style="style">
+  <div ref="el" class="vdz_draggable" :style="dragZoomResult.style">
     <slot></slot>
   </div>
 </template>

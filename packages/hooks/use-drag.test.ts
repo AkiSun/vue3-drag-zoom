@@ -231,10 +231,10 @@ describe('use-drag', () => {
       // Verify position was clamped to boundary
       expect(lastTransform).not.toBeNull()
       if (lastTransform) {
-        expect(lastTransform.x).toBeLessThanOrEqual(100)
-        expect(lastTransform.x).toBeGreaterThanOrEqual(-100)
-        expect(lastTransform.y).toBeLessThanOrEqual(100)
-        expect(lastTransform.y).toBeGreaterThanOrEqual(-100)
+        expect((lastTransform as Transform).x).toBeLessThanOrEqual(100)
+        expect((lastTransform as Transform).x).toBeGreaterThanOrEqual(-100)
+        expect((lastTransform as Transform).y).toBeLessThanOrEqual(100)
+        expect((lastTransform as Transform).y).toBeGreaterThanOrEqual(-100)
       }
     })
 
