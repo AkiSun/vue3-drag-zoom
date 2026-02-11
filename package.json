@@ -47,6 +47,7 @@
     "vue": "^3.2.41"
   },
   "devDependencies": {
+    "@octokit/rest": "^22.0.1",
     "@types/node": "^18.11.9",
     "@typescript-eslint/eslint-plugin": "^6.0.0",
     "@typescript-eslint/parser": "^6.0.0",
