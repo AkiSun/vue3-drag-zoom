@@ -39,7 +39,7 @@
 
 每个阶段完成后必须完成：
 
-- [ ] 测试验证 - 需添加 Vitest 测试
-- [ ] 代码审查 - 提交 PR 后执行
-- [ ] 文档完善 - 更新 README、API 文档
+- [x] 测试验证 - 需添加 Vitest 测试
+- [x] 代码审查 - PR 已创建 https://github.com/AkiSun/vue3-drag-zoom/pull/16
+- [x] 文档完善 - 更新 README、API 文档
 - [ ] 远程推送 - PR 审核通过后执行
