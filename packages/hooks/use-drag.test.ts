@@ -112,7 +112,7 @@ describe('use-drag', () => {
       wrapper = mount(TestComponent, { attachTo: container })
 
       // Check that touchstart was added (second call)
-      const touchStartCall = addSpy.mock.calls.find((call) => call[0] === 'touchstart')
+      const touchStartCall = addSpy.mock.calls.find(call => call[0] === 'touchstart')
       expect(touchStartCall).toBeDefined()
       if (touchStartCall) {
         expect(touchStartCall[2]).toEqual({ passive: false })
@@ -200,8 +200,8 @@ describe('use-drag', () => {
               minY: -100,
               maxY: 100
             },
-            onDragMove: (t) => {
-              lastTransform = t
+            onDragMove: t => {
+              lastTransform = { ...t }
             }
           })
           return {}

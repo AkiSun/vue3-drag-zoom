@@ -1,8 +1,7 @@
-import { onMounted, onBeforeUnmount, getCurrentInstance, reactive } from "vue"
+import { onMounted, onBeforeUnmount, getCurrentInstance, reactive } from 'vue'
 import { MaybeComputedRef, MaybeRef, Transform, Range } from '../types'
-import { unref, clamp, defaultRange } from "../utils"
+import { unref, clamp, defaultRange } from '../utils'
 import { useDrag, UseDragOption } from './use-drag'
-
 
 export interface UseDragZoomOption extends UseDragOption {
   zoomRange?: Range
@@ -10,13 +9,13 @@ export interface UseDragZoomOption extends UseDragOption {
 }
 
 export function useDragZoom(
-  el: MaybeRef<HTMLElement | undefined>, 
-  transformProps: MaybeComputedRef<Transform>, 
+  el: MaybeRef<HTMLElement | undefined>,
+  transformProps: MaybeComputedRef<Transform>,
   option: UseDragZoomOption = {}
 ) {
   const { triggerElement, parentTransform, ...restStates } = useDrag(el, transformProps, option)
   const range = reactive(option.zoomRange ?? defaultRange())
-  
+
   // Pinch-to-zoom state
   let initialPinchDistance = 0
   let initialScale = 1
@@ -26,7 +25,7 @@ export function useDragZoom(
     let deltaScale = (event.deltaY / -100) * range.step
     const fixedScale = clamp(scale + deltaScale, range.min, range.max)
     deltaScale = fixedScale - scale
-    
+
     // Compute new position of element after scaling
     const currentEl = unref(el)
     if (currentEl) {
@@ -38,12 +37,12 @@ export function useDragZoom(
         relativeX /= parentScale
         relativeY /= parentScale
       }
-      x -= relativeX / scale * deltaScale
-      y -= relativeY / scale * deltaScale
+      x -= (relativeX / scale) * deltaScale
+      y -= (relativeY / scale) * deltaScale
       scale += deltaScale
     }
 
-    if(option.onZoom?.({ x, y, scale }, event) === false) return
+    if (option.onZoom?.({ x, y, scale }, event) === false) return
 
     event.stopPropagation()
     event.preventDefault()
@@ -80,28 +79,28 @@ export function useDragZoom(
       const currentDistance = getTouchDistance(event.touches)
       const scaleRatio = currentDistance / initialPinchDistance
       let { x, y, scale } = unref(transformProps)
-      
+
       let newScale = initialScale * scaleRatio
       newScale = clamp(newScale, range.min, range.max)
       const deltaScale = newScale - scale
-      
+
       const currentEl = unref(el)
       if (currentEl) {
         const { left, top } = currentEl.getBoundingClientRect()
         const midpoint = getTouchMidpoint(event.touches)
         let relativeX = midpoint.x - left
         let relativeY = midpoint.y - top
-        
+
         if (parentTransform) {
           const { scale: parentScale } = unref(parentTransform)
           relativeX /= parentScale
           relativeY /= parentScale
         }
-        
-        x -= relativeX / scale * deltaScale
-        y -= relativeY / scale * deltaScale
+
+        x -= (relativeX / scale) * deltaScale
+        y -= (relativeY / scale) * deltaScale
         scale = newScale
-        
+
         // Create a synthetic wheel event for onZoom callback consistency
         const syntheticWheelEvent = new WheelEvent('wheel', {
           deltaY: Math.log(scaleRatio) * -100,
@@ -109,9 +108,9 @@ export function useDragZoom(
           cancelable: true
         })
 
-        if(option.onZoom?.({ x, y, scale }, syntheticWheelEvent) === false) return
+        if (option.onZoom?.({ x, y, scale }, syntheticWheelEvent) === false) return
       }
-      
+
       event.preventDefault()
       event.stopPropagation()
     }

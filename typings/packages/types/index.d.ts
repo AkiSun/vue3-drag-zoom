@@ -1,15 +1,15 @@
-import { ComputedRef, Ref } from 'vue';
-export declare type MaybeRef<T> = T | Ref<T>;
-export declare type MaybeComputedRef<T> = MaybeRef<T> | ComputedRef<T> | (() => T);
+import { ComputedRef, Ref } from 'vue'
+export declare type MaybeRef<T> = T | Ref<T>
+export declare type MaybeComputedRef<T> = MaybeRef<T> | ComputedRef<T> | (() => T)
 export interface Position {
-    x: number;
-    y: number;
+  x: number
+  y: number
 }
 export interface Transform extends Position {
-    scale: number;
+  scale: number
 }
 export interface Range {
-    min: number;
-    max: number;
-    step: number;
+  min: number
+  max: number
+  step: number
 }

@@ -2,9 +2,8 @@
 import { ref, reactive, onMounted } from 'vue'
 import { defaultTransform, Transform } from '../packages'
 
-
 const viewTransform = ref(defaultTransform())
-const items = reactive<{id:number, transform: Transform}[]>([])
+const items = reactive<{ id: number; transform: Transform }[]>([])
 const counter = ref(1)
 const add = () => {
   items.push({
@@ -18,33 +17,45 @@ const add = () => {
 }
 
 onMounted(() => {
-  Array.from({length: 3}).map(add)
+  Array.from({ length: 3 }).map(add)
 })
-
 </script>
 
 <template>
-  <drag-zoom-container class="viewport" v-model="viewTransform" :zoomRange="{ max: 3, min: 0.6, step: 0.2}">
+  <drag-zoom-container
+    v-model="viewTransform"
+    class="viewport"
+    :zoom-range="{ max: 3, min: 0.6, step: 0.2 }"
+  >
     <template #fixed>
-      <div style="left: 20px; top: 20px; position: absolute; z-index: 999;">
+      <div style="left: 20px; top: 20px; position: absolute; z-index: 999">
         <div>
           view scale: {{ Number(`${Math.round(`${viewTransform.scale}e${1}` as any)}e-${1}`) }}
           <button @click="viewTransform = defaultTransform()">reset</button>
-        </div><br/>
-        <button @click="items.length = 0; counter = 1 ">clear</button><br/>
-        <button @click="add">add+</button><br/>
+        </div>
+        <br />
+        <button
+          @click="
+            items.length = 0
+            counter = 1
+          "
+        >
+          clear</button
+        ><br />
+        <button @click="add">add+</button><br />
       </div>
     </template>
     <drag-zoom-item
-      class="draggable"
-      v-for="item, index in items"
+      v-for="(item, index) in items"
+      :key="item.id"
       v-model="item.transform"
+      class="draggable"
     >
       <div>
-        👋Drag item #{{item.id}}
+        👋Drag item #{{ item.id }}
         <button class="drag-prevent" @click="items.splice(index, 1)">close</button>
       </div>
-      <div style="color: gray;">
+      <div style="color: gray">
         I am at {{ Math.round(item.transform.x) }}, {{ Math.round(item.transform.y) }}
       </div>
     </drag-zoom-item>

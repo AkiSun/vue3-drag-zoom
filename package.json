@@ -37,16 +37,28 @@
     "dev": "vite",
     "build": "vue-tsc --noEmit && vite build",
     "dts": "vue-tsc --declaration --emitDeclarationOnly",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "lint": "eslint . --fix",
+    "format": "prettier --write .",
+    "test": "vitest run --coverage",
+    "test:watch": "vitest watch"
   },
   "dependencies": {
     "vue": "^3.2.41"
   },
   "devDependencies": {
     "@types/node": "^18.11.9",
+    "@typescript-eslint/eslint-plugin": "^6.0.0",
+    "@typescript-eslint/parser": "^6.0.0",
     "@vitejs/plugin-vue": "^3.2.0",
+    "@vitest/coverage-v8": "^1.6.0",
+    "@vue/eslint-config-prettier": "^8.0.0",
+    "@vue/eslint-config-typescript": "^12.0.0",
     "@vue/test-utils": "^2.4.6",
+    "eslint": "^8.50.0",
+    "eslint-plugin-vue": "^9.0.0",
     "happy-dom": "^20.6.0",
+    "prettier": "^3.0.0",
     "typescript": "^4.6.4",
     "vite": "^3.2.3",
     "vitest": "^1.6.0",

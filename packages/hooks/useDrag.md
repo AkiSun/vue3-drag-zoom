@@ -1,29 +1,30 @@
 # useDrag
+
 Make elements draggable.
 
 ## Basic usage
-```html 
-<script setup lang="ts">
-import { ref } from 'vue'
-import { useDrag } from 'vue3-drag-zoom'
 
-const el = ref()
-const transform = ref({ x: 0, y: 0, scale: 1 })
-const { style } = useDrag(el, transform, {
-  onDragMove: (newTransform) => {
-    transform.value = newTransform
-  }
-})
+```html
+<script setup lang="ts">
+  import { ref } from 'vue'
+  import { useDrag } from 'vue3-drag-zoom'
+
+  const el = ref()
+  const transform = ref({ x: 0, y: 0, scale: 1 })
+  const { style } = useDrag(el, transform, {
+    onDragMove: newTransform => {
+      transform.value = newTransform
+    }
+  })
 </script>
 
 <template>
-  <div ref="el" :style="style">
-    Drag me! I am at {{ transform.x }}, {{ transform.y }}
-  </div>
+  <div ref="el" :style="style">Drag me! I am at {{ transform.x }}, {{ transform.y }}</div>
 </template>
 ```
 
 ## Type Declarations
+
 ```ts
 export interface UseDragOption {
   triggerElement?: MaybeRef<HTMLElement | undefined>

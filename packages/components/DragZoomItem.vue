@@ -34,7 +34,7 @@ const { style, isDragging } = useDragZoom(el, () => props.modelValue, {
   dragHandleClass: props.dragHandleClass,
   dragPreventClass: props.dragPreventClass,
   zoomRange: props.zoomRange,
-  onDragStart: (event) => {
+  onDragStart: event => {
     if (!props.draggable) return false
     emit('drag-start', event)
   },
@@ -43,7 +43,7 @@ const { style, isDragging } = useDragZoom(el, () => props.modelValue, {
     emit('change', newTransform)
     emit('update:modelValue', newTransform)
   },
-  onDragEnd: (event) => {
+  onDragEnd: event => {
     emit('drag-end', event)
   },
   onZoom: (newTransform, event) => {
@@ -57,13 +57,10 @@ const { style, isDragging } = useDragZoom(el, () => props.modelValue, {
 defineExpose({
   isDragging
 })
-
-
 </script>
 
 <template>
-  <div class="draggable" ref="el" :style="style">
+  <div ref="el" class="vdz_draggable" :style="style">
     <slot></slot>
   </div>
 </template>
-

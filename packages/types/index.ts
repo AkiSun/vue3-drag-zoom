@@ -18,4 +18,3 @@ export interface Range {
   max: number
   step: number
 }
-

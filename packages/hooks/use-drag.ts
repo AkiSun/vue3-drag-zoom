@@ -3,7 +3,6 @@ import { MaybeComputedRef, MaybeRef, Transform } from '../types'
 import { unref } from '../utils'
 import { useDocumentEvents } from './use-event-manager'
 
-
 export interface UseDragOption {
   triggerElement?: MaybeRef<HTMLElement | undefined>
   parentTransform?: Transform
@@ -22,8 +21,8 @@ export interface UseDragOption {
 }
 
 export function useDrag(
-  el: MaybeRef<HTMLElement | undefined>, 
-  transformProps: MaybeComputedRef<Transform>, 
+  el: MaybeRef<HTMLElement | undefined>,
+  transformProps: MaybeComputedRef<Transform>,
   option: UseDragOption = {}
 ) {
   const triggerElement = option.triggerElement ?? el
@@ -51,8 +50,10 @@ export function useDrag(
 
     currentOnMove = (e: MouseEvent | TouchEvent) => {
       if (!isDragging.value) return
-      
-      const moveEvent = e.type.startsWith('touch') ? (e as TouchEvent).touches[0] : e as MouseEvent
+
+      const moveEvent = e.type.startsWith('touch')
+        ? (e as TouchEvent).touches[0]
+        : (e as MouseEvent)
       let deltaX = moveEvent.clientX - prevMousePos.x
       let deltaY = moveEvent.clientY - prevMousePos.y
       if (parentTransform) {
@@ -64,14 +65,14 @@ export function useDrag(
       prevMousePos.y = moveEvent.clientY
 
       let { x, y, scale } = unref(transformProps)
-      
+
       // Apply boundary constraints
       const boundary = option.boundary ?? {}
       if (boundary.minX !== undefined) x = Math.max(x, boundary.minX)
       if (boundary.maxX !== undefined) x = Math.min(x, boundary.maxX)
       if (boundary.minY !== undefined) y = Math.max(y, boundary.minY)
       if (boundary.maxY !== undefined) y = Math.min(y, boundary.maxY)
-      
+
       option.onDragMove?.({ x, y, scale }, e as MouseEvent | TouchEvent)
     }
 
@@ -102,7 +103,11 @@ export function useDrag(
   const onMousedown = (e: MouseEvent) => {
     if (e.button !== dragButton) return
     if ((e.target as HTMLElement).className.includes(dragPreventClass)) return
-    if (option.dragHandleClass && !(e.target as HTMLElement).className.includes(option.dragHandleClass)) return
+    if (
+      option.dragHandleClass &&
+      !(e.target as HTMLElement).className.includes(option.dragHandleClass)
+    )
+      return
     if (option.onDragStart?.(e) === false) return
 
     handleDragStart(e.clientX, e.clientY, e)
@@ -112,7 +117,11 @@ export function useDrag(
   const onTouchstart = (e: TouchEvent) => {
     if (e.touches.length !== 1) return
     if ((e.target as HTMLElement).className.includes(dragPreventClass)) return
-    if (option.dragHandleClass && !(e.target as HTMLElement).className.includes(option.dragHandleClass)) return
+    if (
+      option.dragHandleClass &&
+      !(e.target as HTMLElement).className.includes(option.dragHandleClass)
+    )
+      return
     if (option.onDragStart?.(e) === false) return
 
     const touch = e.touches[0]
@@ -146,7 +155,7 @@ export function useDrag(
         triggerEl.removeEventListener('mousedown', onMousedown)
         triggerEl.removeEventListener('touchstart', onTouchstart)
       }
-      
+
       // Clean up document event listeners in case drag is active
       if (currentOnMove) {
         document.removeEventListener('mousemove', currentOnMove)

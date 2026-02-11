@@ -34,28 +34,17 @@ export function useEventManager(
     style?: { position?: string; transformOrigin?: string }
   } = {}
 ) {
-  const {
-    wheelPassive = true,
-    touchPassive = false,
-    mousePassive = false
-  } = options
+  const { wheelPassive = true, touchPassive = false, mousePassive = false } = options
 
   const element = unref(elementRef)
 
   // 注册单个事件监听器
-  const registerEvent = (
-    type: string,
-    handler: EventListener,
-    passive: boolean = false
-  ) => {
+  const registerEvent = (type: string, handler: EventListener, passive: boolean = false) => {
     element?.addEventListener(type, handler as EventListener, { passive })
   }
 
   // 移除单个事件监听器
-  const unregisterEvent = (
-    type: string,
-    handler: EventListener
-  ) => {
+  const unregisterEvent = (type: string, handler: EventListener) => {
     element?.removeEventListener(type, handler as EventListener)
   }
 
@@ -132,14 +121,12 @@ export function useEventManager(
 /**
  * 文档级事件管理器 - 用于拖拽等需要绑定到 document 的事件
  */
-export function useDocumentEvents(
-  handlers: {
-    mousemove?: (e: MouseEvent) => void
-    mouseup?: (e: MouseEvent) => void
-    touchmove?: (e: TouchEvent) => void
-    touchend?: (e: TouchEvent) => void
-  }
-) {
+export function useDocumentEvents(handlers: {
+  mousemove?: (e: MouseEvent) => void
+  mouseup?: (e: MouseEvent) => void
+  touchmove?: (e: TouchEvent) => void
+  touchend?: (e: TouchEvent) => void
+}) {
   let isActive = false
 
   const registerAll = () => {

@@ -3,4 +3,3 @@ import { useDragZoom, UseDragZoomOption } from './use-drag-zoom'
 
 export { useDrag, useDragZoom }
 export type { UseDragOption, UseDragZoomOption }
-
