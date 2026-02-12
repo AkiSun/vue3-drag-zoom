@@ -1,9 +1,8 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, unref } from 'vue'
 import { useDragZoom } from '../hooks'
 import { Transform, Range } from '../types'
 import { defaultRange } from '../utils'
-
 
 export interface DraggableProps {
   modelValue: Transform
@@ -14,26 +13,28 @@ export interface DraggableProps {
   zoomable?: boolean
   zoomRange?: Range
 }
+
 const props = withDefaults(defineProps<DraggableProps>(), {
   draggable: true,
   zoomable: false,
   zoomRange: () => defaultRange()
 })
 const emit = defineEmits<{
-  (e: 'drag-start', event: MouseEvent): void
-  (e: 'drag-move', newTransform: Transform, event: MouseEvent): void
-  (e: 'drag-end', event: MouseEvent): void
+  (e: 'drag-start', event: MouseEvent | TouchEvent): void
+  (e: 'drag-move', newTransform: Transform, event: MouseEvent | TouchEvent): void
+  (e: 'drag-end', event: MouseEvent | TouchEvent): void
   (e: 'zoom', newTransform: Transform, event: WheelEvent): void
   (e: 'change', newTransform: Transform): void
   (e: 'update:modelValue', transform: Transform): void
 }>()
 
-const el = ref()
-const { style, isDragging } = useDragZoom(el, () => props.modelValue, {
+// 使用 templateRef 方式获取 DOM 元素，提供更好的类型推断
+const el = ref<HTMLElement | undefined>(undefined)
+const dragZoomResult = useDragZoom(unref(el), () => props.modelValue, {
   dragHandleClass: props.dragHandleClass,
   dragPreventClass: props.dragPreventClass,
   zoomRange: props.zoomRange,
-  onDragStart: (event) => {
+  onDragStart: event => {
     if (!props.draggable) return false
     emit('drag-start', event)
   },
@@ -42,7 +43,7 @@ const { style, isDragging } = useDragZoom(el, () => props.modelValue, {
     emit('change', newTransform)
     emit('update:modelValue', newTransform)
   },
-  onDragEnd: (event) => {
+  onDragEnd: event => {
     emit('drag-end', event)
   },
   onZoom: (newTransform, event) => {
@@ -54,15 +55,12 @@ const { style, isDragging } = useDragZoom(el, () => props.modelValue, {
 })
 
 defineExpose({
-  isDragging
+  isDragging: dragZoomResult.isDragging
 })
-
-
 </script>
 
 <template>
-  <div class="draggable" ref="el" :style="style">
+  <div ref="el" class="vdz_draggable" :style="dragZoomResult.style">
     <slot></slot>
   </div>
 </template>
-

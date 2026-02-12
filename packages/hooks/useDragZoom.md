@@ -1,19 +1,21 @@
 # useDragZoom
+
 Make elements draggable and zoomable.
 
 ## Basic usage
-```html 
-<script setup lang="ts">
-import { ref } from 'vue'
-import { useDragZoom } from 'vue3-drag-zoom'
 
-const el = ref()
-const transform = ref({ x: 0, y: 0, scale: 1 })
-const { style } = useDragZoom(el, transform, {
-  onChange: (newTransform) => {
-    transform.value = newTransform
-  }
-})
+```html
+<script setup lang="ts">
+  import { ref } from 'vue'
+  import { useDragZoom } from 'vue3-drag-zoom'
+
+  const el = ref()
+  const transform = ref({ x: 0, y: 0, scale: 1 })
+  const { style } = useDragZoom(el, transform, {
+    onChange: newTransform => {
+      transform.value = newTransform
+    }
+  })
 </script>
 
 <template>
@@ -22,9 +24,11 @@ const { style } = useDragZoom(el, transform, {
   </div>
 </template>
 ```
+
 > You need to disable the default dragging behavior of img tag
 
 ## Type Declarations
+
 ```ts
 export interface UseDragZoomOption {
   // extends from UserDragOption

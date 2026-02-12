@@ -1,9 +1,8 @@
 <script setup lang="ts">
-import { ref, provide } from 'vue'
+import { ref, unref, provide } from 'vue'
 import { Transform, Range } from '../types'
 import { useDragZoom } from '../hooks'
 import { defaultRange } from '../utils'
-
 
 export interface DragZoomContainerProps {
   modelValue: Transform
@@ -14,28 +13,30 @@ export interface DragZoomContainerProps {
   zoomable?: boolean
   zoomRange?: Range
 }
+
 const props = withDefaults(defineProps<DragZoomContainerProps>(), {
   draggable: true,
   zoomable: true,
   zoomRange: () => defaultRange()
 })
 const emit = defineEmits<{
-  (e: 'drag-start', event: MouseEvent): void
-  (e: 'drag-move', newTransform: Transform, event: MouseEvent): void
-  (e: 'drag-end', event: MouseEvent): void
+  (e: 'drag-start', event: MouseEvent | TouchEvent): void
+  (e: 'drag-move', newTransform: Transform, event: MouseEvent | TouchEvent): void
+  (e: 'drag-end', event: MouseEvent | TouchEvent): void
   (e: 'zoom', newTransform: Transform, event: WheelEvent): void
   (e: 'change', newTransform: Transform): void
   (e: 'update:modelValue', transform: Transform): void
 }>()
 
-const el = ref()
-const trigger = ref()
-const { style, isDragging } = useDragZoom(el, () => props.modelValue, {
-  triggerElement: trigger,
+// 使用 templateRef 方式获取 DOM 元素，提供更好的类型推断
+const el = ref<HTMLElement | undefined>(undefined)
+const trigger = ref<HTMLElement | undefined>(undefined)
+const dragZoomResult = useDragZoom(unref(el), () => props.modelValue, {
+  triggerElement: unref(trigger),
   dragHandleClass: props.dragHandleClass,
   dragPreventClass: props.dragPreventClass,
   zoomRange: props.zoomRange,
-  onDragStart: (event) => {
+  onDragStart: event => {
     if (!props.draggable) return false
     emit('drag-start', event)
   },
@@ -44,7 +45,7 @@ const { style, isDragging } = useDragZoom(el, () => props.modelValue, {
     emit('change', newTransform)
     emit('update:modelValue', newTransform)
   },
-  onDragEnd: (event) => {
+  onDragEnd: event => {
     emit('drag-end', event)
   },
   onZoom: (newTransform, event) => {
@@ -58,20 +59,17 @@ const { style, isDragging } = useDragZoom(el, () => props.modelValue, {
 provide('PARENT_TRANSFORM', () => props.modelValue)
 
 defineExpose({
-  isDragging
+  isDragging: dragZoomResult.isDragging
 })
-
-
 </script>
 
 <template>
-  <div class="viewport" ref="trigger" style="position: relative; overflow: hidden;">
-    <div class="fixed" style="position: absolute; width: 100%; height: 100%;">
+  <div ref="trigger" class="vdz_viewport" style="position: relative; overflow: hidden">
+    <div class="vdz_fixed" style="position: absolute; width: 100%; height: 100%">
       <slot name="fixed"></slot>
     </div>
-    <div class="view" ref="el" :style="style">
+    <div ref="el" class="vdz_view" :style="dragZoomResult.style">
       <slot name="default"></slot>
     </div>
   </div>
 </template>
-

@@ -14,7 +14,7 @@ export function unref<T>(val: MaybeComputedRef<T>): T {
 }
 
 export function toAny(obj: any) {
-  return (obj as any)
+  return obj as any
 }
 
 export function defaultPosition(): Position {
@@ -28,4 +28,3 @@ export function defaultTransform(): Transform {
 export function defaultRange(): Range {
   return { min: 0.4, max: 2.0, step: 0.2 }
 }
-

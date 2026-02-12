@@ -1,10 +1,11 @@
 import { Directive, reactive, watchEffect } from 'vue'
-import { useDrag, useDragZoom } from "../hooks"
+import { useDrag, useDragZoom } from '../hooks'
 import { MaybeRef, Transform } from '../types'
 import { defaultTransform, toAny } from '../utils'
 
-
-type HookFunction = { (el: MaybeRef<HTMLElement | undefined>, transformProps: Transform, option: any): any }
+type HookFunction = {
+  (el: MaybeRef<HTMLElement | undefined>, transformProps: Transform, option: any): any
+}
 
 function makeDirective(hookFn: HookFunction): Directive<HTMLElement> {
   return {
@@ -30,4 +31,3 @@ function makeDirective(hookFn: HookFunction): Directive<HTMLElement> {
 
 export const vDrag = makeDirective(useDrag)
 export const vDragZoom = makeDirective(useDragZoom)
-
